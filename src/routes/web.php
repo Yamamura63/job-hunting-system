@@ -3,6 +3,15 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/test-session', function () {
+    session(['test' => 'hello']);
+
+    return [
+        'id' => session()->getId(),
+        'value' => session('test'),
+    ];
+})->middleware('web');
+
 Route::get('/', function () {
     return view('welcome');
 });
