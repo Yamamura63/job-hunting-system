@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SelfPrController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test-session', function () {
@@ -27,3 +28,7 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::resource('self-prs', SelfPrController::class);
+Route::get('/selfPr', [SelfPrController::class, 'index'])
+    ->name('selfPr');
