@@ -32,3 +32,7 @@ require __DIR__.'/auth.php';
 Route::resource('self-prs', SelfPrController::class);
 Route::get('/selfPr', [SelfPrController::class, 'index'])
     ->name('selfPr');
+Route::get('/selfPr/create', [SelfPrController::class, 'create'])
+    ->name('selfPr.create');
+Route::post('/selfPr', [SelfPrController::class, 'store'])
+    ->name('selfPr.store');

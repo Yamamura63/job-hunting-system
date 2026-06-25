@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class SelfPrController extends Controller
 {
+
     public function index()
     {
         $selfPrs = SelfPr::all();
@@ -22,12 +23,17 @@ class SelfPrController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => ['required', 'max:100'],
+            'body' => ['required'],
+        ]);
+
         SelfPr::create([
             'user_id' => auth()->id(),
             'title' => $request->title,
             'body' => $request->body,
         ]);
 
-        return redirect()->route('selfPr.index');
+        return redirect()->route('selfPr');
     }
 }
