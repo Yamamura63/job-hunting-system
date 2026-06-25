@@ -3,6 +3,7 @@
 @section('title', '自己PR作成')
 
 @section('content')
+<h1 class="text-3xl">自己PR作成</h1>
 <form method="POST" action="{{ route('selfPr.store') }}">
     @csrf
     <label>タイトル：</label>
