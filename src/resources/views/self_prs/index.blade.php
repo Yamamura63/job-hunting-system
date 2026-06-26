@@ -25,30 +25,31 @@
         onclick="copyPr(@js($selfPr->body))"
         class="absolute top-3 right-3 cursor-pointer"
     >
-        <svg 
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-        >
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 16h8M8 12h8m-6-8h6a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V6a2 2 0 012-2h2"
-            />
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+            <title xmlns="">copy</title>
+            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <path d="M7 9.667A2.667 2.667 0 0 1 9.667 7h8.666A2.667 2.667 0 0 1 21 9.667v8.666A2.667 2.667 0 0 1 18.333 21H9.667A2.667 2.667 0 0 1 7 18.333z"/>
+                <path d="M4.012 16.737A2 2 0 0 1 3 15V5c0-1.1.9-2 2-2h10c.75 0 1.158.385 1.5 1"/>
+            </g>
         </svg>
     </button>
 
 
-    <p class="text-xl font-bold border-b inline-block mb-3">
+    <p class="text-xl font-bold border-b inline-block mb-3 w-64 truncate" title=""{{ $selfPr->title }}>
         {{ $selfPr->title }}
     </p>
 
-    <p>
-        {{ Str::limit($selfPr->body, 100) }}
+    <p id="body-{{ $selfPr->id }}" class="line-clamp-3">
+        {{ $selfPr->body }}
     </p>
+    <button
+    id="button-{{ $selfPr->id }}"
+    type="button"
+    onclick="toggleBody({{ $selfPr->id }}, this)"
+    class="hidden text-blue-500"
+>
+    もっと見る
+</button>
 
 </div>
 
@@ -66,6 +67,24 @@ function copyPr(text) {
         .catch(() => {
             alert('コピーに失敗しました');
         });
+}
+
+document.querySelectorAll('[id^="body-"]').forEach(body => {
+    if (body.scrollHeight > body.clientHeight) {
+        const id = body.id.split('-')[1];
+        document.getElementById(`button-${id}`).classList.remove('hidden');
+    }
+});
+
+function toggleBody(id, button) {
+    const body = document.getElementById(`body-${id}`);
+
+    body.classList.toggle('line-clamp-3');
+
+    button.textContent =
+        body.classList.contains('line-clamp-3')
+            ? 'もっと見る'
+            : '閉じる';
 }
 </script>
 @endsection
