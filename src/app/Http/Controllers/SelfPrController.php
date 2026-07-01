@@ -36,4 +36,24 @@ class SelfPrController extends Controller
 
         return redirect()->route('selfPr');
     }
+
+    public function edit(SelfPr $selfPr)
+    {
+        return view('self_prs.edit', compact('selfPr'));
+    }
+
+    public function update(Request $request, SelfPr $selfPr)
+    {
+        $request->validate([
+            'title' => ['required', 'max:100'],
+            'body' => ['required'],
+        ]);
+
+        $selfPr->update([
+            'title' => $request->title,
+            'body' => $request->body,
+        ]);
+
+        return redirect()->route('selfPr');
+    }
 }

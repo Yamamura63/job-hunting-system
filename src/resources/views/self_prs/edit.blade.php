@@ -1,15 +1,18 @@
 @extends('layouts.app')
 
-@section('title', '自己PR - 作成')
+@section('title', '自己PR - 編集')
 
 @section('content')
-<h1 class="text-4xl p-3">自己PR作成</h1>
+<h1 class="text-4xl p-3">自己PR編集</h1>
 <div class="p-8">
     <div class="mx-auto max-w-6xl rounded-lg bg-white p-8 shadow flex justify-center">
-        <form method="POST" action="{{ route('selfPr.store') }}" class="w-full max-w-2xl">
+        <form method="POST" action="{{ route('selfPr.update', $selfPr->id) }}" class="w-full max-w-2xl">
             @csrf
+            @method("PUT")
             <label class="text-lg font-bold">タイトル名</label><br>
-            <input type="text" name="title" required class="w-full m-2 border border-gray-500 rounded"><br>
+            <input type="text" name="title" required class="w-full m-2 border border-gray-500 rounded"
+                value="{{ old('title', $selfPr->title) }}">
+            <br>
 
             <div class="flex justify-between items-baseline">
                 <label class="text-lg font-bold">本文</label>
@@ -30,24 +33,24 @@
             </div>
             <p id="error" class="text-red-500"></p>
             <textarea id="body" name="body" rows="6" required
-                class="resize-none overflow-y-auto m-2 border rounded w-full"></textarea>
+                class="resize-none overflow-y-auto m-2 border rounded w-full">{{ old('body', $selfPr->body) }}</textarea>
             <br>
-            <button type="submit" class="cursor-pointer text-lg text-white bg-blue-400 rounded pt-2 pb-2 pl-4 pr-4">✐作成</button>
+            <button type="submit" class="cursor-pointer text-lg text-white bg-blue-400 rounded pt-2 pb-2 pl-4 pr-4">✐更新</button>
         </form>
     </div>
 </div>
 <a href="{{ route('selfPr') }}" class="border-b">
-        ← 一覧に戻る
+        ✕ 保存せずに終了
     </a>
 
 <script>
-    const text = document.getElementById('body');
+    const body = document.getElementById('body');
     const count = document.getElementById('count');
     const target = document.querySelector('[name="target_length"]');
     const error = document.getElementById('error');
 
     function checkLength() {
-        const length = text.value.length;
+        const length = body.value.length;
 
         count.textContent = length;
 
@@ -61,6 +64,7 @@
 
     body.addEventListener('input', checkLength);
     target.addEventListener('change', checkLength);
+    checkLength();
 </script>
 
 @endsection
