@@ -12,7 +12,6 @@ class SelfPrController extends Controller
     public function index()
     {
         $selfPrs = SelfPr::orderByRaw('CHAR_LENGTH(body) ASC')->get();
-
         return view('self_prs.index', compact('selfPrs'));
     }
 
@@ -54,6 +53,12 @@ class SelfPrController extends Controller
             'body' => $request->body,
         ]);
 
+        return redirect()->route('selfPr');
+    }
+
+    public function destroy(SelfPr $selfPr)
+    {
+        $selfPr->delete();
         return redirect()->route('selfPr');
     }
 }
