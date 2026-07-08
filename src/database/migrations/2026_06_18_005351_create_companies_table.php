@@ -31,7 +31,7 @@ return new class extends Migration
                 ->nullable();
             $table->integer('break_time')
                 ->nullable();
-            $table->integer('training_period', 50)
+            $table->integer('training_period')
                 ->nullable();
             $table->string('ses_level', 16)
                 ->default('不明');
