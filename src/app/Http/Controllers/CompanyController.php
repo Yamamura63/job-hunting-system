@@ -66,6 +66,8 @@ class CompanyController extends Controller
             'benefits_memo' => $request->benefits_memo,
             'free_memo' => $request->free_memo,
         ]);
+
+        return redirect()->route('company');
     }
 
     /**
