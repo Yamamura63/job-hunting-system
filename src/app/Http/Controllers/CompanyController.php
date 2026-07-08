@@ -42,11 +42,14 @@ class CompanyController extends Controller
             'start_time' => 'nullable',
             'end_time' => 'nullable',
             'break_time' => 'nullable',
-            'training_period' => 'nullable|max:50',
+            'training_year' => 'nullable|integer|min:0',
+            'training_month' => 'nullable|integer|min:0|max:11',
             'ses_level' => 'required|max:16',
             'benefits_memo' => 'nullable',
             'free_memo' => 'nullable',
         ]);
+
+        $trainingPeriod = ($request->training_year ?? 0) * 12 + ($request->training_month ?? 0);
 
         Company::create([
             'user_id' => auth()->id(),
@@ -58,7 +61,7 @@ class CompanyController extends Controller
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'break_time' => $request->break_time,
-            'training_period' => $request->training_period,
+            'training_period' => $trainingPeriod,
             'ses_level' => $request->ses_level,
             'benefits_memo' => $request->benefits_memo,
             'free_memo' => $request->free_memo,
@@ -95,11 +98,14 @@ class CompanyController extends Controller
             'start_time' => 'nullable',
             'end_time' => 'nullable',
             'break_time' => 'nullable',
-            'training_period' => 'nullable|max:50',
+            'training_year' => 'nullable|integer|min:0',
+            'training_month' => 'nullable|integer|min:0|max:11',
             'ses_level' => 'required|max:16',
             'benefits_memo' => 'nullable',
             'free_memo' => 'nullable',
         ]);
+
+        $trainingPeriod = ($request->training_year ?? 0) * 12 + ($request->training_month ?? 0);
 
         $company->update([
             'name' => $request->name,
@@ -110,7 +116,7 @@ class CompanyController extends Controller
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'break_time' => $request->break_time,
-            'training_period' => $request->training_period,
+            'training_period' => $trainingPeriod,
             'ses_level' => $request->ses_level,
             'benefits_memo' => $request->benefits_memo,
             'free_memo' => $request->free_memo,

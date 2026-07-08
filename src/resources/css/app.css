@@ -2,27 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 星評価 */
 .rate-form {
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
 }
-.rate-form input[type=radio] {
-  display: none;
-}
+
 .rate-form label {
-  position: relative;
-  padding: 0 5px;
-  color: #ccc;
-  cursor: pointer;
-  font-size: 35px;
+    font-size: 2rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: color 0.2s;
 }
-.rate-form label:hover {
-  color: #ffcc00;
-}
+
+.rate-form label:hover,
 .rate-form label:hover ~ label {
-  color: #ffcc00;
+    color: #a2c2e6;
 }
-.rate-form input[type=radio]:checked ~ label {
-  color: #ffcc00;
+
+.rate-form input:checked ~ label {
+    color: #6c9bd2;
+}
+
+/* 数値のバーを消す */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance:textfield;
 }

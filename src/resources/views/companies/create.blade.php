@@ -13,45 +13,52 @@
 
             <label class="text-lg font-bold">志望度</label><br>
             <div class="rate-form">
-                <input id="star5" type="radio" name="rate" value="5">
+                <input id="star5" type="radio" name="rate" value="5" class="hidden">
                 <label for="star5">★</label>
-                <input id="star4" type="radio" name="rate" value="4">
+                <input id="star4" type="radio" name="rate" value="4" class="hidden">
                 <label for="star4">★</label>
-                <input id="star3" type="radio" name="rate" value="3">
+                <input id="star3" type="radio" name="rate" value="3" class="hidden" {{ old('rate', 3) == 3 ? 'checked' : '' }}>
                 <label for="star3">★</label>
-                <input id="star2" type="radio" name="rate" value="2">
+                <input id="star2" type="radio" name="rate" value="2" class="hidden">
                 <label for="star2">★</label>
-                <input id="star1" type="radio" name="rate" value="1">
+                <input id="star1" type="radio" name="rate" value="1" class="hidden">
                 <label for="star1">★</label>
             </div><br>
 
             <label class="text-lg font-bold">本社所在地</label><br>
-            <input type="text" name="address" required class="w-full m-2 border border-gray-500 rounded"><br>
+            <input type="text" name="address" class="w-full m-2 border border-gray-500 rounded"><br>
 
             <label class="text-lg font-bold">業種</label><br>
-            <input type="text" name="industry" required class="w-full m-2 border border-gray-500 rounded"><br>
+            <input type="text" name="industry" class="w-full m-2 border border-gray-500 rounded"><br>
 
-            <label class="text-lg font-bold">初任給</label><br>
-            <input type="text" name="salary" required class="w-full m-2 border border-gray-500 rounded"><br>
-            <div class="ml-4">
+            <label class="text-lg font-bold">給与</label><br>
+            <input type="hidden" name="salary" id="salary">
+            <span id="salaryText" class="text-xl"></span> 万円
+            <div class="ml-4 flex items-center">
                 <label class="text-base">基本給：</label>
-                <input type="text" name="kihon" required class="w-full m-2 border border-gray-500 rounded"><br>
-                <label class="text-base">その他：</label>
-                <input type="text" name="ohter" required class="w-full m-2 border border-gray-500 rounded"><br>
+                <input type="number" id="kihon" min="0" class="m-1 text-right border border-gray-500 rounded">
+                <p class="text-xs">万円</p>
+                <label class="text-base ml-5">その他：</label>
+                <input type="number" id="other" min="0" class="m-1 text-right border border-gray-500 rounded">
+                <p class="text-xs">万円</p>
             </div>
 
             <label class="text-lg font-bold">勤務時間</label><br>
             <div class="ml-4">
-                <label class="text-base">出勤時間：</label>
-                <input type="time" name="start">
-                <label class="text-base">退勤時間：</label>
-                <input type="time" name="end"><br>
+                <div class="flex items-center">
+                    <input type="time" name="start" value="{{ old('start', '09:00') }}" class="rounded">
+                    <p class="p-4">～</p>
+                    <input type="time" name="end" value="{{ old('end', '18:00') }}" class="rounded">
+                </div>
                 <label class="text-base">休憩時間：</label>
-                <input type="text" name="break" required class="m-2 border border-gray-500 rounded">時間<br>
+                <input type="number" name="break" class="m-2 border border-gray-500 rounded">時間<br>
             </div>
 
             <label class="text-lg font-bold">研修期間</label><br>
-            <input type="text" name="training" required class="w-full m-2 border border-gray-500 rounded"><br>
+            <div class="flex items-center">
+                <input type="number" id="training_year" min="0" class="w-30 m-2 border border-gray-500 rounded"> 年
+                <input type="number" id="training_month" min="0" max="11" class="w-30 m-2 border border-gray-500 rounded"> か月
+            </div>
 
             <label class="text-lg font-bold">SES度</label><br>
             <div class="flex items-center gap-2">
@@ -67,12 +74,12 @@
 
             <label class="text-lg font-bold">福利厚生メモ</label><br>
             <p id="error" class="text-red-500"></p>
-            <textarea id="benefits" name="body" rows="6" required
+            <textarea id="benefits" name="body" rows="6"
                 class="resize-none overflow-y-auto m-2 border rounded w-full"></textarea><br>
 
             <label class="text-lg font-bold">メモ</label><br>
             <p id="error" class="text-red-500"></p>
-            <textarea id="free" name="body" rows="6" required
+            <textarea id="free" name="body" rows="6"
                 class="resize-none overflow-y-auto m-2 border rounded w-full"></textarea><br>
 
             <br>
@@ -85,6 +92,25 @@
 </a>
 
 <script>
+    const kihon = document.getElementById('kihon');
+    const other = document.getElementById('other');
+    const salary = document.getElementById('salary'); // hidden
+    const salaryText = document.getElementById('salaryText'); // 表示用
+
+    function calcSalary() {
+        const kihonValue = Number(kihon.value) || 0;
+        const otherValue = Number(other.value) || 0;
+
+        const total = kihonValue + otherValue;
+
+        salary.value = total; // DBへ送信する値
+        salaryText.textContent = total; // 画面に表示する値
+    }
+
+    kihon.addEventListener('input', calcSalary);
+    other.addEventListener('input', calcSalary);
+
+
     const text = document.getElementById('body');
     const count = document.getElementById('count');
     const target = document.querySelector('[name="target_length"]');

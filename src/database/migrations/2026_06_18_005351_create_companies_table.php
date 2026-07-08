@@ -29,9 +29,9 @@ return new class extends Migration
                 ->nullable();
             $table->time('end_time')
                 ->nullable();
-            $table->time('break_time')
+            $table->integer('break_time')
                 ->nullable();
-            $table->string('training_period', 50)
+            $table->integer('training_period', 50)
                 ->nullable();
             $table->string('ses_level', 16)
                 ->default('不明');
