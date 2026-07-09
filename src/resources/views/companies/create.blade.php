@@ -49,10 +49,10 @@
                 </div>
                 <div class="ml-4 flex items-center">
                     <label class="text-base">基本給：</label>
-                    <input type="number" id="kihon" min="0" class="m-1 text-right border border-gray-500 rounded">
+                    <input type="number" id="kihon" name="basic_salary" min="0" class="m-1 text-right border border-gray-500 rounded">
                     <p class="text-xs">万円</p>
                     <label class="text-base ml-5">その他：</label>
-                    <input type="number" id="other" min="0" class="m-1 text-right border border-gray-500 rounded">
+                    <input type="number" id="other" name="other_salary" min="0" class="m-1 text-right border border-gray-500 rounded">
                     <p class="text-xs">万円</p>
                 </div>
             </div>
@@ -68,26 +68,44 @@
                     <label class="text-base">休憩時間：</label>
                     <input type="number" name="break_time" class="m-2 border border-gray-500 rounded">時間
                 </div>
+            </div>
 
+            <div class="m-3">
                 <label class="text-lg font-bold">研修期間</label><br>
                 <div class="flex items-center">
-                    <input type="number" id="training_year" min="0" class="w-30 m-2 border border-gray-500 rounded"> 年
-                    <input type="number" id="training_month" min="0" max="11" class="w-30 m-2 border border-gray-500 rounded"> か月
+                    <input type="number" id="training_year" name="training_year" min="0" class="w-30 m-2 border border-gray-500 rounded"> 年
+                    <input type="number" id="training_month" name="training_month" min="0" max="11" class="w-30 m-2 border border-gray-500 rounded"> か月
                 </div>
             </div>
 
             <div class="m-3">
                 <label class="text-lg font-bold">SES度</label><br>
                 <div class="flex items-center gap-2">
-                    <input id="no" type="radio" name="ses_level" value="5">
+                    <input id="no" type="radio" name="ses_level" value="なし">
                     <label for="no">なし</label>
-                    <input id="low" type="radio" name="ses_level" value="4" checked>
+                    <input id="low" type="radio" name="ses_level" value="低">
                     <label for="low">低</label>
-                    <input id="high" type="radio" name="ses_level" value="3">
+                    <input id="high" type="radio" name="ses_level" value="高">
                     <label for="high">高</label>
-                    <input id="miss" type="radio" name="ses_level" value="2">
+                    <input id="miss" type="radio" name="ses_level" value="不明" checked>
                     <label for="miss">不明</label>
                 </div>
+            </div>
+
+            <div class="m-3">
+                <label class="text-lg font-bold">URL</label>
+                <div class="flex gap-3 mt-3">
+                    <input type="text" name="urls[0][memo]" placeholder="詳細（公式HP・採用ページ）" class="border rounded p-2">
+                    <input type="url" name="urls[0][url]" placeholder="https://" class="border rounded p-2 flex-1">
+                    <button type="button" class="p-2 invisible">
+                        削除
+                    </button>
+                </div>
+                <div id="url-list">
+                </div>
+                <button type="button" id="add-url" class="mt-2 p-2 text-white bg-sky-400 hover:bg-sky-300 rounded">
+                    ＋ URLを追加
+                </button>
             </div>
 
             <div class="m-3">
@@ -102,7 +120,7 @@
                     class="w-full resize-none m-2 border rounded"></textarea>
             </div>
 
-            <button type="submit" class="cursor-pointer text-lg text-white bg-blue-400 rounded pt-2 pb-2 pl-4 pr-4">✐登録</button>
+            <button type="submit" class="cursor-pointer text-lg text-white bg-blue-400 hover:bg-blue-300 rounded pt-2 pb-2 pl-4 pr-4">✐登録</button>
         </form>
     </div>
 </div>
@@ -128,6 +146,46 @@
 
     kihon.addEventListener('input', calcSalary);
     other.addEventListener('input', calcSalary);
+
+
+    const urlList = document.getElementById('url-list');
+    const addButton = document.getElementById('add-url');
+
+    let index = 1;
+
+    function addUrlRow() {
+        const row = document.createElement('div');
+
+        row.innerHTML = `
+        <div class="flex gap-3 mt-3">
+            <input
+                type="text"
+                name="urls[${index}][memo]"
+                placeholder="詳細（公式HP・採用ページなど）"
+                class="border rounded p-2">
+
+            <input
+                type="url"
+                name="urls[${index}][url]"
+                placeholder="https://"
+                class="border rounded p-2 flex-1">
+
+            <button type="button" class="delete-url p-2 text-white bg-slate-400 rounded">
+                削除
+            </button>
+        </div>
+    `;
+
+        urlList.appendChild(row);
+
+        row.querySelector('.delete-url').addEventListener('click', () => {
+            row.remove();
+        });
+
+        index++;
+    }
+
+    addButton.addEventListener('click', addUrlRow);
 </script>
 
 @endsection

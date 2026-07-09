@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CompanyUrl extends Model
 {
+    protected $fillable = [
+        'company_id',
+        'url',
+        'memo',
+    ];
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);

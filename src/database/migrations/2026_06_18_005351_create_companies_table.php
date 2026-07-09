@@ -25,6 +25,10 @@ return new class extends Migration
                 ->nullable();
             $table->integer('salary')
                 ->nullable();
+            $table->integer('basic_salary')
+                ->nullable();
+            $table->integer('other_salary')
+                ->nullable();
             $table->time('start_time')
                 ->nullable();
             $table->time('end_time')
@@ -49,5 +53,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('companies');
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn(['basic_salary', 'other_salary']);
+        });
     }
 };

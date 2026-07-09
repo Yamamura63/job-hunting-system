@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\CompanyUrl;
 
 use Illuminate\Http\Request;
 
@@ -38,6 +39,8 @@ class CompanyController extends Controller
             'level' => 'required|integer|min:1|max:5',
             'address' => 'nullable|max:255',
             'industry' => 'nullable|max:50',
+            'basic_salary' => 'nullable|integer|min:0',
+            'other_salary' => 'nullable|integer|min:0',
             'salary' => 'nullable|integer|min:0',
             'start_time' => 'nullable',
             'end_time' => 'nullable',
@@ -51,12 +54,14 @@ class CompanyController extends Controller
 
         $trainingPeriod = ($request->training_year ?? 0) * 12 + ($request->training_month ?? 0);
 
-        Company::create([
+        $company = Company::create([
             'user_id' => auth()->id(),
             'name' => $request->name,
             'level' => $request->level,
             'address' => $request->address,
             'industry' => $request->industry,
+            'basic_salary' => $request->basic_salary,
+            'other_salary' => $request->other_salary,
             'salary' => $request->salary,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
@@ -66,6 +71,20 @@ class CompanyController extends Controller
             'benefits_memo' => $request->benefits_memo,
             'free_memo' => $request->free_memo,
         ]);
+
+        if ($request->filled('urls')) {
+            foreach ($request->urls as $url) {
+
+                if (empty($url['url']) && empty($url['memo'])) {
+                    continue;
+                }
+
+                $company->urls()->create([
+                    'url' => $url['url'],
+                    'memo' => $url['memo'],
+                ]);
+            }
+        }
 
         return redirect()->route('company');
     }
@@ -96,6 +115,8 @@ class CompanyController extends Controller
             'level' => 'required|integer|min:1|max:5',
             'address' => 'nullable|max:255',
             'industry' => 'nullable|max:50',
+            'basic_salary' => 'nullable|integer|min:0',
+            'other_salary' => 'nullable|integer|min:0',
             'salary' => 'nullable|integer|min:0',
             'start_time' => 'nullable',
             'end_time' => 'nullable',
@@ -114,6 +135,8 @@ class CompanyController extends Controller
             'level' => $request->level,
             'address' => $request->address,
             'industry' => $request->industry,
+            'basic_salary' => $request->basic_salary,
+            'other_salary' => $request->other_salary,
             'salary' => $request->salary,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
