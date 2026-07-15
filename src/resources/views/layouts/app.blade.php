@@ -11,6 +11,7 @@
 
         <!-- Tailwind CSS CDN -->
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        @vite('resources/css/app.css')
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">

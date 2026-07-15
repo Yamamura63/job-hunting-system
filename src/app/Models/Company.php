@@ -9,6 +9,24 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Company extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'name',
+        'level',
+        'address',
+        'industry',
+        'salary',
+        'basic_salary',
+        'other_salary',
+        'start_time',
+        'end_time',
+        'break_time',
+        'training_period',
+        'ses_level',
+        'benefits_memo',
+        'free_memo',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
