@@ -53,8 +53,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('companies');
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn(['basic_salary', 'other_salary']);
-        });
+        // Schema::table('companies', function (Blueprint $table) {
+        //     $table->dropColumn(['basic_salary', 'other_salary']);
+        // });
     }
 };

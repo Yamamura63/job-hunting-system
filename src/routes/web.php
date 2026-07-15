@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SelfPrController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\InternshipController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test-session', function () {
@@ -60,3 +61,12 @@ Route::put('/companies/{company}', [CompanyController::class, 'update'])
     ->name('company.update');
 Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
     ->name('company.destroy');
+
+
+Route::resource('internships', InternshipController::class);
+Route::get('/internships', [InternshipController::class, 'index'])
+    ->name('internship');
+Route::get('/internships/create', [InternshipController::class, 'create'])
+    ->name('internship.create');
+Route::post('/internships', [InternshipController::class, 'store'])
+    ->name('internship.store');

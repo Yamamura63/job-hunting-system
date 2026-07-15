@@ -24,7 +24,8 @@ return new class extends Migration
                 ->nullable();
             $table->dateTime('end_datetime')
                 ->nullable();
-            $table->string('place');
+            $table->string('place')
+                ->nullable();
             $table->string('station')
                 ->nullable();
             $table->text('content')
