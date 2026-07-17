@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\CompanyUrl;
 
 use Illuminate\Http\Request;
 
@@ -48,6 +47,8 @@ class CompanyController extends Controller
             'training_year' => 'nullable|integer|min:0',
             'training_month' => 'nullable|integer|min:0|max:11',
             'ses_level' => 'required|max:16',
+            'urls.*.url' => 'nullable|url|max:255',
+            'urls.*.memo' => 'required_with:urls.*.url|max:100',
             'benefits_memo' => 'nullable',
             'free_memo' => 'nullable',
         ]);
@@ -72,18 +73,15 @@ class CompanyController extends Controller
             'free_memo' => $request->free_memo,
         ]);
 
-        if ($request->filled('urls')) {
-            foreach ($request->urls as $url) {
-
-                if (empty($url['url']) && empty($url['memo'])) {
-                    continue;
-                }
-
-                $company->urls()->create([
-                    'url' => $url['url'],
-                    'memo' => $url['memo'],
-                ]);
+        foreach ($request->input('urls', []) as $url) {
+            if (empty($url['url']) && empty($url['memo'])) {
+                continue;
             }
+
+            $company->urls()->create([
+                'url' => $url['url'],
+                'memo' => $url['memo'],
+            ]);
         }
 
         return redirect()->route('company');
@@ -102,6 +100,7 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
+        $company->load('urls');
         return view('companies.edit', compact('company'));
     }
 
@@ -124,6 +123,8 @@ class CompanyController extends Controller
             'training_year' => 'nullable|integer|min:0',
             'training_month' => 'nullable|integer|min:0|max:11',
             'ses_level' => 'required|max:16',
+            'urls.*.url' => 'nullable|url|max:255',
+            'urls.*.memo' => 'required_with:urls.*.url|max:100',
             'benefits_memo' => 'nullable',
             'free_memo' => 'nullable',
         ]);
@@ -146,6 +147,19 @@ class CompanyController extends Controller
             'benefits_memo' => $request->benefits_memo,
             'free_memo' => $request->free_memo,
         ]);
+
+        $company->urls()->delete();
+
+        foreach ($request->input('urls', []) as $url) {
+            if (empty($url['url']) && empty($url['memo'])) {
+                continue;
+            }
+
+            $company->urls()->create([
+                'url' => $url['url'],
+                'memo' => $url['memo'],
+            ]);
+        }
 
         return redirect()->route('company');
     }
