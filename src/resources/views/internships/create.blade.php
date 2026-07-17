@@ -55,19 +55,35 @@
                 </div>
 
                 <div class="m-3">
-                    <label class="text-lg font-bold">URL</label>
-                    <div class="flex gap-3 mt-3">
-                        <input type="text" name="urlname" placeholder="マイナビなど"
-                            class="border rounded p-2">
-                        <input type="url" name="url" placeholder="https://"
-                            class="border rounded p-2 flex-1">
-                    </div>
-                    <div id="url-list">
-                    </div>
-                    <button type="button" id="add-url"
-                        class="mt-2 p-2 text-white bg-sky-400 hover:bg-sky-300 rounded">
-                        ＋ URLを追加
-                    </button>
+                    <label class="text-lg font-bold">交通費</label>
+                    <input type="number" name="carfare_price" class="m-2 border border-gray-500 rounded">円
+                </div>
+
+                <div class="m-3">
+                    <label class="text-lg font-bold">交通費支給</label>
+                    <label><input type="radio" name="carfare" value="1">有</label>
+                    <label><input type="radio" name="carfare" value="0">無</label>
+                </div>
+
+                <div class="m-3">
+                    <label class="text-lg font-bold">昼食有無</label>
+                    <label><input type="radio" name="lunch" value="1">有</label>
+                    <label><input type="radio" name="lunch" value="0">無</label>
+                </div>
+
+                <div class="m-3">
+                    <label class="text-lg font-bold">詳細URL</label>
+                    <input type="url" name="url" placeholder="https://" class="border rounded p-2 flex-1">
+                </div>
+
+                <div class="m-3">
+                    <input type="checkbox" id="applied" name="applied" value="1">
+                    <label class="text-lg font-bold">応募済み</label>
+                </div>
+
+                <div class="m-3">
+                    <input type="checkbox" id="joined" name="joined" value="1">
+                    <label class="text-lg font-bold">参加済み</label>
                 </div>
 
                 <div class="m-3">
@@ -85,63 +101,6 @@
     </a>
 
     <script>
-        const kihon = document.getElementById('kihon');
-        const other = document.getElementById('other');
-        const salary = document.getElementById('salary'); // hidden
-        const salaryText = document.getElementById('salaryText'); // 表示用
-
-        function calcSalary() {
-            const kihonValue = Number(kihon.value) || 0;
-            const otherValue = Number(other.value) || 0;
-
-            const total = kihonValue + otherValue;
-
-            salary.value = total; // DBへ送信する値
-            salaryText.textContent = total; // 画面に表示する値
-        }
-
-        kihon.addEventListener('input', calcSalary);
-        other.addEventListener('input', calcSalary);
-
-
-        const urlList = document.getElementById('url-list');
-        const addButton = document.getElementById('add-url');
-
-        let index = 1;
-
-        function addUrlRow() {
-            const row = document.createElement('div');
-
-            row.innerHTML = `
-        <div class="flex gap-3 mt-3">
-            <input
-                type="text"
-                name="urls[${index}][memo]"
-                placeholder="詳細（公式HP・採用ページなど）"
-                class="border rounded p-2">
-
-            <input
-                type="url"
-                name="urls[${index}][url]"
-                placeholder="https://"
-                class="border rounded p-2 flex-1">
-
-            <button type="button" class="delete-url p-2 text-white bg-slate-400 rounded">
-                削除
-            </button>
-        </div>
-    `;
-
-            urlList.appendChild(row);
-
-            row.querySelector('.delete-url').addEventListener('click', () => {
-                row.remove();
-            });
-
-            index++;
-        }
-
-        addButton.addEventListener('click', addUrlRow);
     </script>
 
 @endsection

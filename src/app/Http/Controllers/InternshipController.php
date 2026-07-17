@@ -31,16 +31,19 @@ class InternshipController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'start_datetime' => 'nullable',
-            'end_datetime' => 'nullable',
-            'place' => 'nullable',
-            'station' => 'nullable',
-            'content' => 'nullable',
-            'carfare' => 'nullable|integer|min:0',
-            'lunch' => 'nullable|integer|min:0',
+            'start_datetime' => 'nullable|date',
+            'end_datetime' => 'nullable|date|after_or_equal:start_datetime',
+            'break_time' => 'nullable|integer|min:0',
+            'place' => 'nullable|max:255',
+            'station' => 'nullable|max:255',
+            'content' => 'nullable|string',
+            'carfare' => 'nullable|boolean',
+            'carfare_price' => 'nullable|integer|min:0',
+            'lunch' => 'nullable|boolean',
+            'url' => 'nullable|url',
             'applied' => 'nullable|boolean',
             'joined' => 'nullable|boolean',
-            'joined_memo' => 'nullable'
+            'joined_memo' => 'nullable|string',
         ]);
 
         $app = filter_var(data_get($validated, 'applied', false), FILTER_VALIDATE_BOOLEAN);

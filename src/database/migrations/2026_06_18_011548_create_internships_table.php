@@ -24,6 +24,8 @@ return new class extends Migration
                 ->nullable();
             $table->dateTime('end_datetime')
                 ->nullable();
+            $table->integer('break_time')
+                ->nullable();
             $table->string('place')
                 ->nullable();
             $table->string('station')
@@ -32,8 +34,12 @@ return new class extends Migration
                 ->nullable();
             $table->boolean('carfare')
                 ->default(false);
+            $table->integer('carfare_price')
+                ->nullable();
             $table->boolean('lunch')
                 ->default(false);
+            $table->string('url')
+                ->nullable();
             $table->boolean('applied')
                 ->default(false);
             $table->boolean('joined')
