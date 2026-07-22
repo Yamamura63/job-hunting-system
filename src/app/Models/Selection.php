@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Selection extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'company_id',
+        'flow_memo',
+        'status',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

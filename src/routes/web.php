@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SelfPrController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\InternshipController;
+use App\Http\Controllers\SelectionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test-session', function () {
@@ -77,3 +78,19 @@ Route::put('/internships/{internship}', [InternshipController::class, 'update'])
     ->name('internship.update');
 Route::delete('/internships/{internship}', [InternshipController::class, 'destroy'])
     ->name('internship.destroy');
+
+
+Route::resource('selections', SelectionController::class);
+Route::get('/selections', [SelectionController::class, 'index'])
+    ->name('selection');
+Route::get('/selections/create', [SelectionController::class, 'create'])
+    ->name('selection.create');
+Route::post('/selections', [SelectionController::class, 'store'])
+    ->name('selection.store');
+
+Route::get('/selections/{selection}/edit', [SelectionController::class, 'edit'])
+    ->name('selection.edit');
+Route::put('/selections/{selection}', [SelectionController::class, 'update'])
+    ->name('selection.update');
+Route::delete('/selections/{selection}', [SelectionController::class, 'destroy'])
+    ->name('selection.destroy');
