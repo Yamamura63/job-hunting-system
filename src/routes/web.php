@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SelfPrController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\InternshipController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test-session', function () {
@@ -28,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::resource('self-prs', SelfPrController::class);
 Route::get('/selfPr', [SelfPrController::class, 'index'])
@@ -60,3 +61,19 @@ Route::put('/companies/{company}', [CompanyController::class, 'update'])
     ->name('company.update');
 Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
     ->name('company.destroy');
+
+
+Route::resource('internships', InternshipController::class);
+Route::get('/internships', [InternshipController::class, 'index'])
+    ->name('internship');
+Route::get('/internships/create', [InternshipController::class, 'create'])
+    ->name('internship.create');
+Route::post('/internships', [InternshipController::class, 'store'])
+    ->name('internship.store');
+
+Route::get('/internships/{internship}/edit', [InternshipController::class, 'edit'])
+    ->name('internship.edit');
+Route::put('/internships/{internship}', [InternshipController::class, 'update'])
+    ->name('internship.update');
+Route::delete('/internships/{internship}', [InternshipController::class, 'destroy'])
+    ->name('internship.destroy');
