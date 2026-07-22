@@ -30,9 +30,9 @@
                     <label class="text-lg font-bold">開催時間</label><br>
                     <div class="ml-4">
                         <div class="flex items-center">
-                            <input type="datetime-local" name="start_datetime" value="{{ old('start', '09:00') }}" class="rounded">
+                            <input type="datetime-local" name="start_datetime" value="{{ old('start_datetime') }}" class="rounded">
                             <p class="p-4">～</p>
-                            <input type="datetime-local" name="end_datetime" value="{{ old('end', '18:00') }}" class="rounded">
+                            <input type="datetime-local" name="end_datetime" value="{{ old('end_datetime') }}" class="rounded">
                         </div>
                         <label class="text-base">休憩時間：</label>
                         <input type="number" name="break_time" class="m-2 border border-gray-500 rounded">時間

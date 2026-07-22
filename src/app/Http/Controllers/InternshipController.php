@@ -78,7 +78,7 @@ class InternshipController extends Controller
             ->with('success', 'インターンシップを登録しました。');
     }
 
-        /**
+    /**
      * Display the specified resource.
      */
     public function show(Internship $internship)
@@ -91,7 +91,11 @@ class InternshipController extends Controller
      */
     public function edit(Internship $internship)
     {
-        return view('internships.edit', compact('internship'));
+        $companies = Company::where('user_id', auth()->id())
+            ->orderBy('name')
+            ->get();
+
+        return view('internships.edit', compact('internship', 'companies'));
     }
 
     /**
@@ -153,5 +157,4 @@ class InternshipController extends Controller
         $internship->delete();
         return redirect()->route('internship');
     }
-
 }
