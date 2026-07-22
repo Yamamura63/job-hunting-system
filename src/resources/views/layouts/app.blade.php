@@ -9,8 +9,8 @@
 
         <!-- <link rel="icon" href="{{ asset('favicon2.ico') }}"> -->
 
-        <!-- Tailwind CSS CDN -->
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <!-- Tailwind CSS CDN
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
         @vite('resources/css/app.css')
     </head>
     <body class="font-sans antialiased">

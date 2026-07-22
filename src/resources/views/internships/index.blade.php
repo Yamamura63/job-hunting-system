@@ -14,20 +14,24 @@
     @if ($internships->isEmpty())
         <p>インターン・選考予定が登録されていません。</p>
     @else
-        <div class="mx-auto max-w-6xl rounded-lg p-8 flex justify-center">
+        <div class="mx-auto max-w-6xl rounded-lg p-8">
             <div class="grid grid-cols-3 gap-6">
                 @foreach ($internships as $internship)
                     <div class="bg-white rounded-lg shadow p-6">
+
                         {{-- 上段 --}}
                         <div class="flex justify-between items-start">
-                            <div>
+                            <div class="w-full">
+
+                                {{-- インターン名・編集削除 --}}
                                 <div class="flex justify-between items-start border-b mb-2">
-                                    <p class="text-xl font-bold inline-block w-50 truncate">
+                                    <p class="text-xl font-bold truncate">
                                         {{ $internship->name }}
                                     </p>
+
                                     {{-- 編集・削除 --}}
                                     <div class="flex items-center gap-2">
-                                        <a href="{{ route('company.edit', $internship->id) }}"
+                                        <a href="{{ route('internship.edit', $internship->id) }}"
                                             class="cursor-pointer hover:text-emerald-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
                                                 viewBox="0 0 24 24">
@@ -36,8 +40,9 @@
                                                     d="M13 21h8M15 5l4 4m2.174-2.188a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
                                             </svg>
                                         </a>
-                                        <form action="{{ route('company.destroy', $internship) }}" method="POST"
-                                            onsubmit="return confirm('この企業を削除しますか？')">
+
+                                        <form action="{{ route('internship.destroy', $internship) }}" method="POST"
+                                            onsubmit="return confirm('削除しますか？')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="cursor-pointer hover:text-red-500">
@@ -50,35 +55,65 @@
                                         </form>
                                     </div>
                                 </div>
-                                <p><strong>志望度：</strong>
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        {{ $i <= $internship->level ? '★' : '☆' }}
-                                    @endfor
+
+                                {{-- 企業 --}}
+                                <p>
+                                    <strong>企業：</strong>
+                                    {{ $internship->company->name ?? '企業未登録' }}
                                 </p>
-                                <p><strong>給与：</strong> {{ $internship->salary }} 万円</p>
-                                <p><strong>勤務時間：</strong>
-                                    {{ \Carbon\Carbon::parse($internship->start_time)->format('H:i') }}
-                                    ～
-                                    {{ \Carbon\Carbon::parse($internship->end_time)->format('H:i') }}
+
+                                {{-- 日程 --}}
+                                <p>
+                                    <strong>日程：</strong>
+
+                                    @if ($internship->start_datetime)
+                                        {{ \Carbon\Carbon::parse($internship->start_datetime)->format('Y/m/d H:i') }}
+                                    @endif
+
+                                    @if ($internship->end_datetime)
+                                        ～ {{ \Carbon\Carbon::parse($internship->end_datetime)->format('Y/m/d H:i') }}
+                                    @endif
                                 </p>
-                                <p><strong>SES度：</strong>{{ $internship->ses_level }}</p>
-                                @forelse ($internship->urls as $url)
+
+                                {{-- URL --}}
+                                @if ($internship->url)
                                     <div>
                                         <strong>URL：</strong>
-                                        <a href="{{ $url->url }}" target="_blank" class="text-blue-500 underline">
-                                            {{ $url->memo }}
+                                        <a href="{{ $internship->url }}" target="_blank"
+                                            class="text-blue-500 underline">
+                                            インターンシップ詳細ページ
                                         </a>
                                     </div>
-                                @empty
+                                @else
                                     <div>
                                         <strong>URL：</strong>
                                         <span>登録なし</span>
                                     </div>
-                                @endforelse
+                                @endif
+
+                                {{-- 応募・参加状況 --}}
+                                <p>
+                                    <strong>応募状況：</strong>
+                                    @if ($internship->applied)
+                                        <span class="text-green-600">応募済み</span>
+                                    @else
+                                        <span>未応募</span>
+                                    @endif
+                                </p>
+
+                                <p>
+                                    <strong>参加状況：</strong>
+                                    @if ($internship->joined)
+                                        <span class="text-green-600">参加済み</span>
+                                    @else
+                                        <span>未参加</span>
+                                    @endif
+                                </p>
+
                             </div>
                         </div>
 
-                        {{-- アコーディオン --}}
+                        {{-- 詳細 --}}
                         <details class="mt-4">
                             <summary class="cursor-pointer font-semibold">
                                 詳細を見る
@@ -86,38 +121,50 @@
 
                             <div class="mt-3 space-y-2">
 
-                                <p><strong>所在地：</strong><br>
-                                    {{ $internship->address }}</p>
-
-                                <p><strong>業種：</strong><br>
-                                    {{ $internship->industry }}</p>
-
                                 <p>
-                                    <strong>給与内訳：</strong><br>
-                                    基本給 {{ $internship->basic_salary }} 万円 /
-                                    その他 {{ $internship->other_salary }} 万円
+                                    <strong>開催場所：</strong><br>
+                                    {{ $internship->place ?: 'なし' }}
                                 </p>
 
-                                <p><strong>休憩時間：</strong><br>
-                                    {{ $internship->break_time }} 時間</p>
-
                                 <p>
-                                    <strong>研修期間：</strong><br>
-                                    {{ intdiv($internship->training_period, 12) }}年
-                                    {{ $internship->training_period % 12 }}か月
+                                    <strong>最寄り駅：</strong><br>
+                                    {{ $internship->station ?: 'なし' }}
                                 </p>
 
                                 <div>
-                                    <strong>福利厚生メモ</strong>
+                                    <strong>内容：</strong>
                                     <p>
-                                        {{ $internship->benefits_memo ?: 'なし' }}
+                                        {{ $internship->content ?: 'なし' }}
                                     </p>
                                 </div>
 
+                                <p>
+                                    <strong>交通費支給：</strong>
+                                    @if ($internship->carfare)
+                                        あり
+                                    @else
+                                        なし
+                                    @endif
+                                </p>
+
+                                <p>
+                                    <strong>自費交通費：</strong><br>
+                                    {{ $internship->carfare_price ?? 'なし' }}
+                                </p>
+
+                                <p>
+                                    <strong>昼食支給：</strong>
+                                    @if ($internship->lunch)
+                                        あり
+                                    @else
+                                        なし
+                                    @endif
+                                </p>
+
                                 <div>
-                                    <strong>メモ</strong>
+                                    <strong>参加後メモ：</strong>
                                     <p>
-                                        {{ $internship->free_memo ?: 'なし' }}
+                                        {{ $internship->joined_memo ?: 'なし' }}
                                     </p>
                                 </div>
 
@@ -126,28 +173,7 @@
 
                     </div>
                 @endforeach
-
             </div>
         </div>
     @endif
-
-    <script>
-        document.querySelectorAll('[id^="body-"]').forEach(body => {
-            if (body.scrollHeight > body.clientHeight) {
-                const id = body.id.split('-')[1];
-                document.getElementById(`button-${id}`).classList.remove('hidden');
-            }
-        });
-
-        function toggleBody(id, button) {
-            const body = document.getElementById(`body-${id}`);
-
-            body.classList.toggle('line-clamp-3');
-
-            button.textContent =
-                body.classList.contains('line-clamp-3') ?
-                'もっと見る' :
-                '閉じる';
-        }
-    </script>
 @endsection
