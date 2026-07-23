@@ -12,16 +12,49 @@ class SelectionController extends Controller
     /**
      * 選考一覧を表示
      */
-    public function index()
+    public function index(Request $request)
     {
-        $selections = Selection::where('user_id', auth()->id())
-            ->with('company')
-            ->latest()
-            ->get();
+        $query = Selection::with('company')
+            ->where('selections.user_id', auth()->id());
+
+        // 企業名検索
+        if ($request->filled('searchS')) {
+            $query->whereHas('company', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->searchS . '%');
+            });
+        }
+
+        // 状況で絞り込み
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // 並べ替え
+        if ($request->sort === 'new') {
+            // 開催日時が遅い順
+            $query->orderByDesc('selection_datetime');
+        } elseif ($request->sort === 'old') {
+            // 開催日時が早い順
+            $query->orderBy('selection_datetime');
+        } elseif ($request->sort === 'company_asc') {
+            // 企業名 昇順
+            $query->join('companies', 'selections.company_id', '=', 'companies.id')
+                ->orderBy('companies.name')
+                ->select('selections.*');
+        } elseif ($request->sort === 'company_desc') {
+            // 企業名 降順
+            $query->join('companies', 'selections.company_id', '=', 'companies.id')
+                ->orderByDesc('companies.name')
+                ->select('selections.*');
+        } else {
+            // デフォルト：開催日時が遅い順
+            $query->orderByDesc('selection_datetime');
+        }
+
+        $selections = $query->get();
 
         return view('selections.index', compact('selections'));
     }
-
     /**
      * 選考登録画面を表示
      */

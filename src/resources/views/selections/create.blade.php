@@ -80,7 +80,7 @@
                     <label class="text-lg font-bold">現在状況</label><br>
                     <select name="status" class="m-2 border rounded">
                         <option value="noFinish" @selected(old('status', 'noFinish') == 'noFinish')>未終了</option>
-                        <option value="finish" @selected(old('status') == 'finish')>終了</option>
+                        <option value="finish" @selected(old('status') == 'finish')>終了・結果未発表</option>
                         <option value="result" @selected(old('status') == 'result')>結果発表済み</option>
                     </select>
                 </div>

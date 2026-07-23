@@ -11,11 +11,26 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $companies = Company::where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $query = Company::where('user_id', auth()->id());
+
+        // 企業名検索
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // 志望度順の並べ替え
+        if ($request->sort === 'high') {
+            $query->orderByDesc('level');
+        } elseif ($request->sort === 'low') {
+            $query->orderBy('level');
+        } else {
+            // デフォルト：登録日時の新しい順
+            $query->latest();
+        }
+
+        $companies = $query->get();
 
         return view('companies.index', compact('companies'));
     }

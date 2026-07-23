@@ -5,10 +5,62 @@
 @section('content')
     <div class="flex justify-between items-center mt-5 mb-5 ml-6 mr-9 gap-2 shrink-0">
         <h1 class="text-3xl font-bold">選考一覧</h1>
+        <div class="flex items-center gap-4">
+            {{-- 検索 --}}
+            <form action="{{ route('selection') }}" method="GET" class="flex items-center gap-2">
+                <input type="text" name="searchS" value="{{ request('searchS') }}" placeholder="企業名を検索"
+                    class="border rounded px-3 py-1">
+                {{-- 他の条件を維持 --}}
+                <input type="hidden" name="sort" value="{{ request('sort') }}">
+                <input type="hidden" name="applied" value="{{ request('applied') }}">
+                <input type="hidden" name="status" value="{{ request('status') }}">
+                <button type="submit" class="px-3 py-1 bg-gray-500 text-white rounded">
+                    検索
+                </button>
+            </form>
 
-        <a href="{{ route('selection.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-            ＋ 選考予定を追加
-        </a>
+            {{-- 状況で絞り込み --}}
+            <form action="{{ route('selection') }}" method="GET" class="flex items-center gap-2">
+                {{-- 他の条件を維持 --}}
+                <input type="hidden" name="searchS" value="{{ request('searchS') }}">
+                <input type="hidden" name="sort" value="{{ request('sort') }}">
+
+                <label for="status">状況：</label>
+                <select name="status" id="status" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                    <option value="" @selected(request('status') === null)>すべて</option>
+                    <option value="noFinish" @selected(request('status') === 'noFinish')>未終了</option>
+                    <option value="finish" @selected(request('status') === 'finish')>終了・結果未発表</option>
+                    <option value="result" @selected(request('status') === 'result')>結果発表済み</option>
+                </select>
+            </form>
+
+            {{-- 並べ替え --}}
+            <form action="{{ route('selection') }}" method="GET" class="flex items-center gap-2">
+                {{-- 他の条件を維持 --}}
+                <input type="hidden" name="searchS" value="{{ request('searchS') }}">
+                <input type="hidden" name="status" value="{{ request('status') }}">
+
+                <label for="sort">並べ替え：</label>
+                <select name="sort" id="sort" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                    <option value="new" @selected(request('sort', 'new') === 'new')>
+                        開催日時が遅い順
+                    </option>
+                    <option value="old" @selected(request('sort') === 'old')>
+                        開催日時が早い順
+                    </option>
+                    <option value="company_asc" @selected(request('sort') === 'company_asc')>
+                        企業名 昇順
+                    </option>
+                    <option value="company_desc" @selected(request('sort') === 'company_desc')>
+                        企業名 降順
+                    </option>
+                </select>
+            </form>
+
+            <a href="{{ route('selection.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                ＋ 選考予定を追加
+            </a>
+        </div>
     </div>
 
     @if ($selections->isEmpty())
