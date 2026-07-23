@@ -39,7 +39,7 @@ return new class extends Migration
             $table->string('result_period', 50)
                 ->nullable();
             $table->string('status', 20)
-                ->default('予定');
+                ->default('noFinish');
             $table->timestamps();
         });
     }

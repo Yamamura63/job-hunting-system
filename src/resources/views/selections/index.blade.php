@@ -26,7 +26,7 @@
                                 {{-- 企業名・編集削除 --}}
                                 <div class="flex justify-between items-start border-b mb-2">
                                     <p class="text-xl font-bold truncate">
-                                        {{ $selection->company->name }}
+                                        {{ $selection->company->name }}：{{ $selection->step }}
                                     </p>
 
                                     {{-- 編集・削除 --}}
@@ -56,51 +56,23 @@
                                     </div>
                                 </div>
 
-                                {{-- 日程 --}}
                                 <p>
-                                    <strong>日程：</strong>
-
-                                    @if ($selection->start_datetime)
-                                        {{ \Carbon\Carbon::parse($selection->start_datetime)->format('Y/m/d H:i') }}
-                                    @endif
-
-                                    @if ($selection->end_datetime)
-                                        ～ {{ \Carbon\Carbon::parse($selection->end_datetime)->format('Y/m/d H:i') }}
-                                    @endif
-                                </p>
-
-                                {{-- URL --}}
-                                @if ($selection->url)
-                                    <div>
-                                        <strong>URL：</strong>
-                                        <a href="{{ $selection->url }}" target="_blank"
-                                            class="text-blue-500 underline">
-                                            インターンシップ詳細ページ
-                                        </a>
-                                    </div>
-                                @else
-                                    <div>
-                                        <strong>URL：</strong>
-                                        <span>登録なし</span>
-                                    </div>
-                                @endif
-
-                                {{-- 応募・参加状況 --}}
-                                <p>
-                                    <strong>応募状況：</strong>
-                                    @if ($selection->applied)
-                                        <span class="text-green-600">応募済み</span>
+                                    <strong>選考日時：</strong>
+                                    @if ($selection->selection_datetime)
+                                        {{ \Carbon\Carbon::parse($selection->selection_datetime)->format('Y/m/d H:i') }}
                                     @else
-                                        <span>未応募</span>
+                                        未定
                                     @endif
                                 </p>
 
                                 <p>
-                                    <strong>参加状況：</strong>
-                                    @if ($selection->joined)
-                                        <span class="text-green-600">参加済み</span>
-                                    @else
-                                        <span>未参加</span>
+                                    <strong>状況：</strong>
+                                    @if ($selection->status === 'noFinish')
+                                        未終了
+                                    @elseif ($selection->status === 'finish')
+                                        終了
+                                    @elseif ($selection->status === 'result')
+                                        結果発表済み
                                     @endif
                                 </p>
 
@@ -114,6 +86,15 @@
                             </summary>
 
                             <div class="mt-3 space-y-2">
+                                <p>
+                                    <strong>服装：</strong><br>
+                                    {{ $selection->clothing ?: 'なし' }}
+                                </p>
+
+                                <p>
+                                    <strong>持ち物：</strong><br>
+                                    {{ $selection->items ?: 'なし' }}
+                                </p>
 
                                 <p>
                                     <strong>開催場所：</strong><br>
@@ -125,13 +106,6 @@
                                     {{ $selection->station ?: 'なし' }}
                                 </p>
 
-                                <div>
-                                    <strong>内容：</strong>
-                                    <p>
-                                        {{ $selection->content ?: 'なし' }}
-                                    </p>
-                                </div>
-
                                 <p>
                                     <strong>交通費支給：</strong>
                                     @if ($selection->carfare)
@@ -142,17 +116,21 @@
                                 </p>
 
                                 <p>
-                                    <strong>自費交通費：</strong><br>
-                                    {{ $selection->carfare_price ?? 'なし' }}
+                                    <strong>自費交通費：</strong>
+                                    {{ $selection->carfare_price ?? 'なし' }}円
                                 </p>
 
                                 <div>
-                                    <strong>参加後メモ：</strong>
+                                    <strong>メモ：</strong>
                                     <p>
-                                        {{ $selection->joined_memo ?: 'なし' }}
+                                        {{ $selection->free_memo ?: 'なし' }}
                                     </p>
                                 </div>
 
+                                <p>
+                                    <strong>結果連絡期間：</strong><br>
+                                    {{ $selection->result_period ?: 'なし' }}
+                                </p>
                             </div>
                         </details>
 

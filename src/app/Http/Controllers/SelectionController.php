@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Selection;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SelectionController extends Controller
 {
@@ -42,15 +43,15 @@ class SelectionController extends Controller
             'company_id'  => 'required|exists:companies,id',
             'step'  => 'required|string|max:50',
             'selection_datetime'  => 'nullable|date',
-            'place'  => 'nullable|max:255',
-            'station'  => 'nullable|max:255',
+            'place'  => 'nullable|string|max:255',
+            'station'  => 'nullable|string|max:255',
             'carfare' => 'nullable|boolean',
             'carfare_price'  => 'nullable|integer|min:0',
-            'clothing'  => 'nullable|max:255',
+            'clothing'  => 'nullable|string|max:255',
             'items'  => 'nullable|string',
             'free_memo'  => 'nullable|string',
             'result_period'  => 'nullable|max:50',
-            'status'  => 'required|stirng|max:20',
+            'status' => 'required|in:noFinish,finish,result',
         ]);
 
         $validated['user_id'] = auth()->id();
@@ -58,7 +59,7 @@ class SelectionController extends Controller
         Selection::create($validated);
 
         return redirect()
-            ->route('selections.index')
+            ->route('selection')
             ->with('success', '選考情報を登録しました。');
     }
 
@@ -96,24 +97,28 @@ class SelectionController extends Controller
         abort_unless($selection->user_id === auth()->id(), 403);
 
         $validated = $request->validate([
-            'company_id'  => 'required|exists:companies,id',
+            'company_id' => [
+                'required',
+                Rule::exists('companies', 'id')
+                    ->where('user_id', auth()->id()),
+            ],
             'step'  => 'required|string|max:50',
             'selection_datetime'  => 'nullable|date',
-            'place'  => 'nullable|max:255',
-            'station'  => 'nullable|max:255',
+            'place'  => 'nullable|string|max:255',
+            'station'  => 'nullable|string|max:255',
             'carfare' => 'nullable|boolean',
             'carfare_price'  => 'nullable|integer|min:0',
-            'clothing'  => 'nullable|max:255',
+            'clothing'  => 'nullable|string|max:255',
             'items'  => 'nullable|string',
             'free_memo'  => 'nullable|string',
             'result_period'  => 'nullable|max:50',
-            'status'  => 'required|string|max:20',
+            'status' => 'required|in:noFinish,finish,result',
         ]);
 
         $selection->update($validated);
 
         return redirect()
-            ->route('selections.index')
+            ->route('selection')
             ->with('success', '選考情報を更新しました。');
     }
 
@@ -127,7 +132,7 @@ class SelectionController extends Controller
         $selection->delete();
 
         return redirect()
-            ->route('selections.index')
+            ->route('selection')
             ->with('success', '選考情報を削除しました。');
     }
 }

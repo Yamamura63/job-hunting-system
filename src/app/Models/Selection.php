@@ -23,6 +23,10 @@ class Selection extends Model
         'status',
     ];
 
+    protected $casts = [
+        'selection_datetime' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
