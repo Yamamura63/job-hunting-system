@@ -1,37 +1,37 @@
 @extends('layouts.app')
 
-@section('title', 'インターンシップ一覧')
+@section('title', '選考一覧')
 
 @section('content')
     <div class="flex justify-between items-center mt-5 mb-5 ml-6 mr-9 gap-2 shrink-0">
-        <h1 class="text-3xl font-bold">インターンシップ一覧</h1>
+        <h1 class="text-3xl font-bold">選考一覧</h1>
 
-        <a href="{{ route('internship.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-            ＋ インターンシップを追加
+        <a href="{{ route('selection.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+            ＋ 選考予定を追加
         </a>
     </div>
 
-    @if ($internships->isEmpty())
-        <p>インターンシップが登録されていません。</p>
+    @if ($selections->isEmpty())
+        <p>選考予定が登録されていません。</p>
     @else
         <div class="mx-auto max-w-6xl rounded-lg p-8">
             <div class="grid grid-cols-3 gap-6">
-                @foreach ($internships as $internship)
+                @foreach ($selections as $selection)
                     <div class="bg-white rounded-lg shadow p-6">
 
                         {{-- 上段 --}}
                         <div class="flex justify-between items-start">
                             <div class="w-full">
 
-                                {{-- インターン名・編集削除 --}}
+                                {{-- 企業名・編集削除 --}}
                                 <div class="flex justify-between items-start border-b mb-2">
                                     <p class="text-xl font-bold truncate">
-                                        {{ $internship->name }}
+                                        {{ $selection->company->name }}：{{ $selection->step }}
                                     </p>
 
                                     {{-- 編集・削除 --}}
                                     <div class="flex items-center gap-2">
-                                        <a href="{{ route('internship.edit', $internship->id) }}"
+                                        <a href="{{ route('selection.edit', $selection->id) }}"
                                             class="cursor-pointer hover:text-emerald-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
                                                 viewBox="0 0 24 24">
@@ -41,7 +41,7 @@
                                             </svg>
                                         </a>
 
-                                        <form action="{{ route('internship.destroy', $internship) }}" method="POST"
+                                        <form action="{{ route('selection.destroy', $selection) }}" method="POST"
                                             onsubmit="return confirm('削除しますか？')">
                                             @csrf
                                             @method('DELETE')
@@ -56,57 +56,23 @@
                                     </div>
                                 </div>
 
-                                {{-- 企業 --}}
                                 <p>
-                                    <strong>企業：</strong>
-                                    {{ $internship->company->name ?? '企業未登録' }}
-                                </p>
-
-                                {{-- 日程 --}}
-                                <p>
-                                    <strong>日程：</strong>
-
-                                    @if ($internship->start_datetime)
-                                        {{ \Carbon\Carbon::parse($internship->start_datetime)->format('Y/m/d H:i') }}
-                                    @endif
-
-                                    @if ($internship->end_datetime)
-                                        ～ {{ \Carbon\Carbon::parse($internship->end_datetime)->format('Y/m/d H:i') }}
-                                    @endif
-                                </p>
-
-                                {{-- URL --}}
-                                @if ($internship->url)
-                                    <div>
-                                        <strong>URL：</strong>
-                                        <a href="{{ $internship->url }}" target="_blank"
-                                            class="text-blue-500 underline">
-                                            インターンシップ詳細ページ
-                                        </a>
-                                    </div>
-                                @else
-                                    <div>
-                                        <strong>URL：</strong>
-                                        <span>登録なし</span>
-                                    </div>
-                                @endif
-
-                                {{-- 応募・参加状況 --}}
-                                <p>
-                                    <strong>応募状況：</strong>
-                                    @if ($internship->applied)
-                                        <span class="text-green-600">応募済み</span>
+                                    <strong>選考日時：</strong>
+                                    @if ($selection->selection_datetime)
+                                        {{ \Carbon\Carbon::parse($selection->selection_datetime)->format('Y/m/d H:i') }}
                                     @else
-                                        <span>未応募</span>
+                                        未定
                                     @endif
                                 </p>
 
                                 <p>
-                                    <strong>参加状況：</strong>
-                                    @if ($internship->joined)
-                                        <span class="text-green-600">参加済み</span>
-                                    @else
-                                        <span>未参加</span>
+                                    <strong>状況：</strong>
+                                    @if ($selection->status === 'noFinish')
+                                        未終了
+                                    @elseif ($selection->status === 'finish')
+                                        終了
+                                    @elseif ($selection->status === 'result')
+                                        結果発表済み
                                     @endif
                                 </p>
 
@@ -120,27 +86,29 @@
                             </summary>
 
                             <div class="mt-3 space-y-2">
+                                <p>
+                                    <strong>服装：</strong><br>
+                                    {{ $selection->clothing ?: 'なし' }}
+                                </p>
+
+                                <p>
+                                    <strong>持ち物：</strong><br>
+                                    {{ $selection->items ?: 'なし' }}
+                                </p>
 
                                 <p>
                                     <strong>開催場所：</strong><br>
-                                    {{ $internship->place ?: 'なし' }}
+                                    {{ $selection->place ?: 'なし' }}
                                 </p>
 
                                 <p>
                                     <strong>最寄り駅：</strong><br>
-                                    {{ $internship->station ?: 'なし' }}
+                                    {{ $selection->station ?: 'なし' }}
                                 </p>
-
-                                <div>
-                                    <strong>内容：</strong>
-                                    <p>
-                                        {{ $internship->content ?: 'なし' }}
-                                    </p>
-                                </div>
 
                                 <p>
                                     <strong>交通費支給：</strong>
-                                    @if ($internship->carfare)
+                                    @if ($selection->carfare)
                                         あり
                                     @else
                                         なし
@@ -148,26 +116,21 @@
                                 </p>
 
                                 <p>
-                                    <strong>自費交通費：</strong><br>
-                                    {{ $internship->carfare_price ?? 'なし' }}
-                                </p>
-
-                                <p>
-                                    <strong>昼食支給：</strong>
-                                    @if ($internship->lunch)
-                                        あり
-                                    @else
-                                        なし
-                                    @endif
+                                    <strong>自費交通費：</strong>
+                                    {{ $selection->carfare_price ?? 'なし' }}円
                                 </p>
 
                                 <div>
-                                    <strong>参加後メモ：</strong>
+                                    <strong>メモ：</strong>
                                     <p>
-                                        {{ $internship->joined_memo ?: 'なし' }}
+                                        {{ $selection->free_memo ?: 'なし' }}
                                     </p>
                                 </div>
 
+                                <p>
+                                    <strong>結果連絡期間：</strong><br>
+                                    {{ $selection->result_period ?: 'なし' }}
+                                </p>
                             </div>
                         </details>
 

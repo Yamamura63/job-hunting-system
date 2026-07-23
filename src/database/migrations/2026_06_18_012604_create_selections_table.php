@@ -19,10 +19,27 @@ return new class extends Migration
             $table->foreignId('company_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->text('flow_memo')
+            $table->string('step', 50);
+            $table->dateTime('selection_datetime')
+                ->nullable();
+            $table->string('place')
+                ->nullable();
+            $table->string('station')
+                ->nullable();
+            $table->boolean('carfare')
+                ->default(false);
+            $table->integer('carfare_price')
+                ->nullable();
+            $table->string('clothing')
+                ->nullable();
+            $table->text('items')
+                ->nullable();
+            $table->text('free_memo')
+                ->nullable();
+            $table->string('result_period', 50)
                 ->nullable();
             $table->string('status', 20)
-                ->default('未応募');
+                ->default('noFinish');
             $table->timestamps();
         });
     }

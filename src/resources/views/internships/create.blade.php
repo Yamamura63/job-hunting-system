@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'インターンシップ・選考 - 登録')
+@section('title', 'インターンシップ - 登録')
 
 @section('content')
-    <h1 class="text-4xl p-3">インターンシップ・選考登録</h1>
+    <h1 class="text-4xl p-3">インターンシップ登録</h1>
     <div class="p-8">
         <div class="mx-auto max-w-6xl rounded-lg bg-white p-8 shadow flex justify-center">
             <form method="POST" action="{{ route('internship.store') }}" class="w-full max-w-2xl">
