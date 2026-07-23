@@ -39,9 +39,18 @@ class SelectionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'company_id' => 'required|exists:companies,id',
-            'flow_memo' => 'nullable',
-            'status' => 'required|string|max:20',
+            'company_id'  => 'required|exists:companies,id',
+            'step'  => 'required|string|max:50',
+            'selection_datetime'  => 'nullable|date',
+            'place'  => 'nullable|max:255',
+            'station'  => 'nullable|max:255',
+            'carfare' => 'nullable|boolean',
+            'carfare_price'  => 'nullable|integer|min:0',
+            'clothing'  => 'nullable|max:255',
+            'items'  => 'nullable|string',
+            'free_memo'  => 'nullable|string',
+            'result_period'  => 'nullable|max:50',
+            'status'  => 'required|stirng|max:20',
         ]);
 
         $validated['user_id'] = auth()->id();
@@ -87,9 +96,18 @@ class SelectionController extends Controller
         abort_unless($selection->user_id === auth()->id(), 403);
 
         $validated = $request->validate([
-            'company_id' => 'required|exists:companies,id',
-            'flow_memo' => 'nullable',
-            'status' => 'required|string|max:20',
+            'company_id'  => 'required|exists:companies,id',
+            'step'  => 'required|string|max:50',
+            'selection_datetime'  => 'nullable|date',
+            'place'  => 'nullable|max:255',
+            'station'  => 'nullable|max:255',
+            'carfare' => 'nullable|boolean',
+            'carfare_price'  => 'nullable|integer|min:0',
+            'clothing'  => 'nullable|max:255',
+            'items'  => 'nullable|string',
+            'free_memo'  => 'nullable|string',
+            'result_period'  => 'nullable|max:50',
+            'status'  => 'required|string|max:20',
         ]);
 
         $selection->update($validated);

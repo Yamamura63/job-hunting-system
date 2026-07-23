@@ -10,7 +10,16 @@ class Selection extends Model
     protected $fillable = [
         'user_id',
         'company_id',
-        'flow_memo',
+        'step',
+        'selection_datetime',
+        'place',
+        'station',
+        'carfare',
+        'carfare_price',
+        'clothing',
+        'items',
+        'free_memo',
+        'result_period',
         'status',
     ];
 
