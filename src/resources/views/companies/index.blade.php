@@ -10,7 +10,7 @@
 
             {{-- 検索 --}}
             <form action="{{ route('company') }}" method="GET" class="flex items-center gap-2">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="企業名を検索"
+                <input type="search" name="search" value="{{ request('search') }}" placeholder="企業名を検索"
                     class="border rounded px-3 py-1">
                 {{-- 並べ替え条件を維持 --}}
                 <input type="hidden" name="sort" value="{{ request('sort') }}">
@@ -41,7 +41,7 @@
         <p>企業が登録されていません。</p>
     @else
         <div class="mx-auto max-w-6xl rounded-lg p-8 flex justify-center">
-            <div class="grid grid-cols-3 gap-6">
+            <div class="grid grid-cols-3 gap-6 items-start">
                 @foreach ($companies as $company)
                     <div class="bg-white rounded-lg shadow p-6">
                         {{-- 上段 --}}

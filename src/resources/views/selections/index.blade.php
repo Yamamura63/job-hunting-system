@@ -8,7 +8,7 @@
         <div class="flex items-center gap-4">
             {{-- 検索 --}}
             <form action="{{ route('selection') }}" method="GET" class="flex items-center gap-2">
-                <input type="text" name="searchS" value="{{ request('searchS') }}" placeholder="企業名を検索"
+                <input type="search" name="searchS" value="{{ request('searchS') }}" placeholder="企業名を検索"
                     class="border rounded px-3 py-1">
                 {{-- 他の条件を維持 --}}
                 <input type="hidden" name="sort" value="{{ request('sort') }}">
@@ -67,7 +67,7 @@
         <p>選考予定が登録されていません。</p>
     @else
         <div class="mx-auto max-w-6xl rounded-lg p-8">
-            <div class="grid grid-cols-3 gap-6">
+            <div class="grid grid-cols-3 gap-6 items-start">
                 @foreach ($selections as $selection)
                     <div class="bg-white rounded-lg shadow p-6">
 
