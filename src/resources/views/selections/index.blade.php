@@ -64,7 +64,7 @@
     </div>
 
     @if ($selections->isEmpty())
-        <p>選考予定が登録されていません。</p>
+        <p class="px-6 mt-5">選考予定が登録されていません。</p>
     @else
         <div class="mx-auto max-w-6xl rounded-lg p-8">
             <div class="grid grid-cols-3 gap-6 items-start">
