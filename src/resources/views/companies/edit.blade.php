@@ -5,7 +5,7 @@
 @section('content')
     <h1 class="text-4xl p-3">企業編集</h1>
     <div class="p-8">
-        <div class="mx-auto max-w-6xl rounded-lg bg-white p-8 shadow flex justify-center">
+        <div class="mx-auto max-w-6xl rounded-lg bg-white p-4 sm:p-8 shadow flex justify-center">
             @if ($errors->any())
                 <div class="text-red-500">
                     @foreach ($errors->all() as $error)
@@ -63,17 +63,18 @@
                         <span id="salaryText" class="ml-2 text-xl"></span>
                         <p class="text-xl">万円</p>
                     </div>
-                    <div class="ml-4 flex items-center">
-                        <label class="text-base">基本給：</label>
+                    <div class="ml-4 flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <label class="text-base whitespace-nowrap">基本給：</label>
                         <input type="number" id="kihon" name="basic_salary" min="0"
-                            class="m-1 text-right border border-gray-500 rounded"
+                            class="w-20 min-w-0 box-border m-1 text-right border border-gray-500 rounded"
                             value="{{ old('basic_salary', $company->basic_salary) }}">
-                        <p class="text-xs">万円</p>
-                        <label class="text-base ml-5">その他：</label>
+                        <p class="text-xs whitespace-nowrap">万円</p>
+
+                        <label class="text-base whitespace-nowrap ml-2">その他：</label>
                         <input type="number" id="other" name="other_salary" min="0"
-                            class="m-1 text-right border border-gray-500 rounded"
+                            class="w-20 min-w-0 box-border m-1 text-right border border-gray-500 rounded"
                             value="{{ old('other_salary', $company->other_salary) }}">
-                        <p class="text-xs">万円</p>
+                        <p class="text-xs whitespace-nowrap">万円</p>
                     </div>
                 </div>
 
@@ -100,13 +101,16 @@
                     @endphp
 
                     <label class="text-lg font-bold">研修期間</label><br>
-                    <div class="flex items-center">
+                    <div class="flex flex-wrap items-center gap-1">
                         <input type="number" id="training_year" name="training_year" min="0"
-                            class="w-30 m-2 text-right border border-gray-500 rounded"
-                            value="{{ old('training_year', $trainingYear) }}"> 年
+                            class="w-20 min-w-0 box-border m-2 text-right border border-gray-500 rounded"
+                            value="{{ old('training_year', $trainingYear) }}">
+                        <span class="whitespace-nowrap">年</span>
+
                         <input type="number" id="training_month" name="training_month" min="0" max="11"
-                            class="w-30 m-2 text-right border border-gray-500 rounded"
-                            value="{{ old('training_month', $trainingMonth) }}"> か月
+                            class="w-20 min-w-0 box-border m-2 text-right border border-gray-500 rounded"
+                            value="{{ old('training_month', $trainingMonth) }}">
+                        <span class="whitespace-nowrap">か月</span>
                     </div>
                 </div>
 
@@ -131,11 +135,15 @@
                 <div class="m-3">
                     <label class="text-lg font-bold">URL</label>
                     @foreach ($company->urls as $index => $url)
-                        <div class="flex gap-3 mt-3">
+                        <div class="flex flex-col sm:flex-row gap-3 mt-3 min-w-0">
                             <input type="text" name="urls[{{ $index }}][memo]" placeholder="詳細（公式HP・採用ページ）"
-                                class="memo border rounded p-2" value="{{ old("urls.$index.memo", $url->memo) }}">
+                                class="memo w-full sm:w-1/3 min-w-0 box-border border rounded p-2"
+                                value="{{ old("urls.$index.memo", $url->memo) }}">
+
                             <input type="url" name="urls[{{ $index }}][url]" placeholder="https://"
-                                class="url border rounded p-2 flex-1" value="{{ old("urls.$index.url", $url->url) }}">
+                                class="url w-full sm:flex-1 min-w-0 box-border border rounded p-2"
+                                value="{{ old("urls.$index.url", $url->url) }}">
+
                             @if ($index === 0)
                                 <button type="button" class="clear-url p-2 text-slate-400 border rounded">
                                     クリア
@@ -145,11 +153,13 @@
                                     削除
                                 </button>
                             @endif
+
                             <input type="hidden" name="urls[{{ $index }}][id]" value="{{ $url->id }}">
                         </div>
                     @endforeach
                     <div id="url-list"> </div>
-                    <button type="button" id="add-url" class="mt-2 p-2 text-white bg-sky-400 hover:bg-sky-300 rounded">
+                    <button type="button" id="add-url"
+                        class="mt-2 p-2 text-white bg-sky-400 hover:bg-sky-300 rounded">
                         ＋ URLを追加
                     </button>
                 </div>
@@ -168,19 +178,19 @@
                     <button type="submit"
                         class="mr-2 cursor-pointer text-lg text-white bg-blue-400 hover:bg-blue-300 rounded pt-2 pb-2 pl-4 pr-4">✐更新</button>
             </form>
-                    <form action="{{ route('company.destroy', $company) }}" method="POST"
-                        onsubmit="return confirm('この企業を削除しますか？')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="flex items-center cursor-pointer hover:text-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                                <path fill="currentColor"
-                                    d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zm-6.287 10.713Q11 16.425 11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17t.713-.288m4 0Q15 16.426 15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17t.713-.288M7 6v13z" />
-                            </svg>
-                            <span class="ml-1">削除</span>
-                        </button>
-                    </form>
-                </div>
+            <form action="{{ route('company.destroy', $company) }}" method="POST"
+                onsubmit="return confirm('この企業を削除しますか？')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="flex items-center cursor-pointer hover:text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zm-6.287 10.713Q11 16.425 11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17t.713-.288m4 0Q15 16.426 15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17t.713-.288M7 6v13z" />
+                    </svg>
+                    <span class="ml-1">削除</span>
+                </button>
+            </form>
+        </div>
     </div>
     </div>
     <a href="{{ route('company') }}" class="m-3 p-2 hover:bg-slate-300 rounded">
@@ -231,24 +241,24 @@
             const row = document.createElement('div');
 
             row.innerHTML = `
-        <div class="flex gap-3 mt-3">
-            <input
-                type="text"
-                name="urls[${index}][memo]"
-                placeholder="詳細（公式HP・採用ページなど）"
-                class="border rounded p-2">
+    <div class="flex flex-col sm:flex-row gap-3 mt-3 min-w-0">
+        <input
+            type="text"
+            name="urls[${index}][memo]"
+            placeholder="詳細（公式HP・採用ページなど）"
+            class="w-full sm:w-1/3 min-w-0 box-border border rounded p-2">
 
-            <input
-                type="url"
-                name="urls[${index}][url]"
-                placeholder="https://"
-                class="border rounded p-2 flex-1">
+        <input
+            type="url"
+            name="urls[${index}][url]"
+            placeholder="https://"
+            class="w-full sm:flex-1 min-w-0 box-border border rounded p-2">
 
-            <button type="button" class="delete-url p-2 text-white bg-slate-400 rounded">
-                削除
-            </button>
-        </div>
-    `;
+        <button type="button" class="delete-url p-2 text-white bg-slate-400 rounded">
+            削除
+        </button>
+    </div>
+`;
 
             urlList.appendChild(row);
 
