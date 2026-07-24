@@ -3,24 +3,40 @@
 @section('title', 'インターンシップ一覧')
 
 @section('content')
-    <div class="flex justify-between items-center mt-5 mb-5 ml-6 mr-9 gap-2 shrink-0">
-        <h1 class="text-3xl font-bold">インターンシップ一覧</h1>
-        <div class="flex items-center gap-4">
+
+    {{-- ページタイトル・追加ボタン --}}
+    <div class="sticky top-0 z-10 bg-gray-100 px-6 pt-5 pb-3">
+
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold">インターンシップ一覧</h1>
+
+            <a href="{{ route('internship.create') }}" class="shrink-0 px-4 py-2 bg-blue-500 text-white rounded">
+                ＋ インターンシップを追加
+            </a>
+        </div>
+
+        {{-- 検索・絞り込み・並べ替え --}}
+        <div class="mt-4 flex flex-wrap items-center gap-4">
+
             {{-- 検索 --}}
-            <form action="{{ route('internship') }}" method="GET" class="flex items-center gap-2">
+            <form action="{{ route('internship') }}" method="GET" class="flex flex-wrap items-center gap-2">
+
                 <input type="search" name="searchI" value="{{ request('searchI') }}" placeholder="企業名を検索"
-                    class="border rounded px-3 py-1">
+                    class="w-full sm:w-auto border rounded px-3 py-1">
+
                 {{-- 他の条件を維持 --}}
                 <input type="hidden" name="sort" value="{{ request('sort') }}">
                 <input type="hidden" name="applied" value="{{ request('applied') }}">
                 <input type="hidden" name="joined" value="{{ request('joined') }}">
+
                 <button type="submit" class="px-3 py-1 bg-gray-500 text-white rounded">
                     検索
                 </button>
             </form>
 
             {{-- 応募・参加状況の絞り込み --}}
-            <form action="{{ route('internship') }}" method="GET" class="flex items-center gap-4">
+            <form action="{{ route('internship') }}" method="GET" class="flex flex-wrap items-center gap-4">
+
                 {{-- 他の条件を維持 --}}
                 <input type="hidden" name="searchI" value="{{ request('searchI') }}">
                 <input type="hidden" name="sort" value="{{ request('sort') }}">
@@ -28,40 +44,46 @@
                 {{-- 応募済み --}}
                 <label class="flex items-center gap-1 cursor-pointer">
                     <input type="checkbox" name="applied" value="1" onchange="this.form.submit()"
-                        @checked(request()->has('applied'))>応募済み
+                        @checked(request()->has('applied'))>
+                    応募済み
                 </label>
 
                 {{-- 参加済み --}}
                 <label class="flex items-center gap-1 cursor-pointer">
                     <input type="checkbox" name="joined" value="1" onchange="this.form.submit()"
-                        @checked(request()->has('joined'))>参加済み
+                        @checked(request()->has('joined'))>
+                    参加済み
                 </label>
             </form>
 
             {{-- 並べ替え --}}
-            <form action="{{ route('internship') }}" method="GET" class="flex items-center gap-2">
+            <form action="{{ route('internship') }}" method="GET" class="flex flex-wrap items-center gap-2">
+
                 {{-- 他の条件を維持 --}}
                 <input type="hidden" name="searchI" value="{{ request('searchI') }}">
                 <input type="hidden" name="applied" value="{{ request('applied') }}">
                 <input type="hidden" name="joined" value="{{ request('joined') }}">
+
                 <label for="sort">並べ替え：</label>
+
                 <select name="sort" id="sort" class="border rounded px-2 py-1" onchange="this.form.submit()">
-                    <option value="new" @selected(request('sort', 'new') === 'new')>開催日時が遅い順</option>
-                    <option value="old" @selected(request('sort') === 'old')>開催日時が早い順</option>
+                    <option value="new" @selected(request('sort', 'new') === 'new')>
+                        開催日時が遅い順
+                    </option>
+                    <option value="old" @selected(request('sort') === 'old')>
+                        開催日時が早い順
+                    </option>
                 </select>
             </form>
 
-            <a href="{{ route('internship.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-                ＋ インターンシップを追加
-            </a>
         </div>
     </div>
 
     @if ($internships->isEmpty())
-        <p>インターンシップが登録されていません。</p>
+        <p class="px-6 mt-5">インターンシップが登録されていません。</p>
     @else
         <div class="mx-auto max-w-6xl rounded-lg p-8">
-            <div class="grid grid-cols-3 gap-6 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-6 items-start">
                 @foreach ($internships as $internship)
                     <div class="bg-white rounded-lg shadow p-6">
 
@@ -69,14 +91,13 @@
                         <div class="flex justify-between items-start">
                             <div class="w-full">
 
-                                {{-- インターン名・編集削除 --}}
-                                <div class="flex justify-between items-start border-b mb-2">
-                                    <p class="text-xl font-bold truncate">
+                                <div class="flex justify-between items-start border-b mb-2 w-full">
+                                    <p class="text-xl font-bold truncate min-w-0">
                                         {{ $internship->name }}
                                     </p>
 
                                     {{-- 編集・削除 --}}
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-2 shrink-0 ml-2">
                                         <a href="{{ route('internship.edit', $internship->id) }}"
                                             class="cursor-pointer hover:text-emerald-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
@@ -159,9 +180,11 @@
                         </div>
 
                         {{-- 詳細 --}}
-                        <details class="mt-4">
-                            <summary class="cursor-pointer font-semibold">
-                                詳細を見る
+                        <details class="mt-4 group">
+                            <summary class="cursor-pointer font-semibold list-none">
+                                <span
+                                    class="group-open:hidden cursor-pointer font-semibold text-blue-500 hover:text-blue-800 hover:underline">▼
+                                    詳細を見る</span>
                             </summary>
 
                             <div class="mt-3 space-y-2">
@@ -213,9 +236,12 @@
                                     </p>
                                 </div>
 
+                                <button type="button" class="mt-4 cursor-pointer font-semibold text-blue-500 hover:text-blue-800 hover:underline"
+                                    onclick="this.closest('details').removeAttribute('open')">
+                                    ▲ 閉じる
+                                </button>
                             </div>
                         </details>
-
                     </div>
                 @endforeach
             </div>

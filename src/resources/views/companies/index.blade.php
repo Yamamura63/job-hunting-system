@@ -3,10 +3,20 @@
 @section('title', '企業一覧')
 
 @section('content')
-    <div class="flex justify-between items-center mt-5 mb-5 ml-6 mr-9 gap-2 shrink-0">
-        <h1 class="text-3xl font-bold">企業一覧</h1>
+@section('content')
 
-        <div class="flex items-center gap-4">
+    {{-- ページタイトル・追加ボタン --}}
+    <div class="sticky top-0 z-10 bg-gray-100 px-6 pt-5 pb-3">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold">企業一覧</h1>
+
+            <a href="{{ route('company.create') }}" class="shrink-0 px-4 py-2 bg-blue-500 text-white rounded">
+                ＋ 企業を追加
+            </a>
+        </div>
+
+        {{-- 検索・並べ替え --}}
+        <div class="mt-4 flex flex-wrap items-center gap-4">
 
             {{-- 検索 --}}
             <form action="{{ route('company') }}" method="GET" class="flex items-center gap-2">
@@ -24,35 +34,30 @@
                 {{-- 検索条件を維持 --}}
                 <input type="hidden" name="search" value="{{ request('search') }}">
                 <label for="sort">並べ替え：</label>
-                <select name="sort" id="sort" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                <select name="sort" id="sort" class="border rounded pr-7 px-2 py-1" onchange="this.form.submit()">
                     <option value="">登録が新しい順</option>
                     <option value="high" @selected(request('sort') === 'high')>志望度が高い順</option>
                     <option value="low" @selected(request('sort') === 'low')>志望度が低い順</option>
                 </select>
             </form>
-
-            <a href="{{ route('company.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-                ＋ 企業を追加
-            </a>
         </div>
     </div>
-
     @if ($companies->isEmpty())
-        <p>企業が登録されていません。</p>
+        <p class="px-6 mt-5">企業が登録されていません。</p>
     @else
-        <div class="mx-auto max-w-6xl rounded-lg p-8 flex justify-center">
-            <div class="grid grid-cols-3 gap-6 items-start">
+        <div class="mx-auto max-w-6xl rounded-lg p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                 @foreach ($companies as $company)
                     <div class="bg-white rounded-lg shadow p-6">
                         {{-- 上段 --}}
                         <div class="flex justify-between items-start">
-                            <div>
-                                <div class="flex justify-between items-start border-b mb-2">
-                                    <p class="text-xl font-bold inline-block w-50 truncate">
+                            <div class="w-full">
+                                <div class="flex justify-between items-start border-b mb-2 w-full">
+                                    <p class="text-xl font-bold inline-block min-w-0 truncate">
                                         {{ $company->name }}
                                     </p>
                                     {{-- 編集・削除 --}}
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-2 shrink-0 ml-2">
                                         <a href="{{ route('company.edit', $company->id) }}"
                                             class="cursor-pointer hover:text-emerald-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
@@ -105,9 +110,11 @@
                         </div>
 
                         {{-- アコーディオン --}}
-                        <details class="mt-4">
-                            <summary class="cursor-pointer font-semibold">
-                                詳細を見る
+                        <details class="mt-4 group">
+                            <summary class="cursor-pointer font-semibold list-none">
+                                <span
+                                    class="group-open:hidden cursor-pointer font-semibold text-blue-500 hover:text-blue-800 hover:underline">▼
+                                    詳細を見る</span>
                             </summary>
 
                             <div class="mt-3 space-y-2">
@@ -147,6 +154,12 @@
                                     </p>
                                 </div>
 
+                                {{-- 閉じるボタン --}}
+                                <button type="button"
+                                    class="mt-4 cursor-pointer font-semibold text-blue-500 hover:text-blue-800 hover:underline"
+                                    onclick="this.closest('details').removeAttribute('open')">
+                                    ▲ 閉じる
+                                </button>
                             </div>
                         </details>
 
