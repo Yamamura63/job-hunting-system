@@ -6,16 +6,42 @@
     <div class="flex justify-between items-center mt-5 mb-5 ml-6 mr-9 gap-2 shrink-0">
         <h1 class="text-3xl font-bold">企業一覧</h1>
 
-        <a href="{{ route('company.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-            ＋ 企業を追加
-        </a>
+        <div class="flex items-center gap-4">
+
+            {{-- 検索 --}}
+            <form action="{{ route('company') }}" method="GET" class="flex items-center gap-2">
+                <input type="search" name="search" value="{{ request('search') }}" placeholder="企業名を検索"
+                    class="border rounded px-3 py-1">
+                {{-- 並べ替え条件を維持 --}}
+                <input type="hidden" name="sort" value="{{ request('sort') }}">
+                <button type="submit" class="px-3 py-1 bg-gray-500 text-white rounded">
+                    検索
+                </button>
+            </form>
+
+            {{-- 並べ替え --}}
+            <form action="{{ route('company') }}" method="GET" class="flex items-center gap-2">
+                {{-- 検索条件を維持 --}}
+                <input type="hidden" name="search" value="{{ request('search') }}">
+                <label for="sort">並べ替え：</label>
+                <select name="sort" id="sort" class="border rounded px-2 py-1" onchange="this.form.submit()">
+                    <option value="">登録が新しい順</option>
+                    <option value="high" @selected(request('sort') === 'high')>志望度が高い順</option>
+                    <option value="low" @selected(request('sort') === 'low')>志望度が低い順</option>
+                </select>
+            </form>
+
+            <a href="{{ route('company.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                ＋ 企業を追加
+            </a>
+        </div>
     </div>
 
     @if ($companies->isEmpty())
         <p>企業が登録されていません。</p>
     @else
         <div class="mx-auto max-w-6xl rounded-lg p-8 flex justify-center">
-            <div class="grid grid-cols-3 gap-6">
+            <div class="grid grid-cols-3 gap-6 items-start">
                 @foreach ($companies as $company)
                     <div class="bg-white rounded-lg shadow p-6">
                         {{-- 上段 --}}

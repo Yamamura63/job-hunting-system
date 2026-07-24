@@ -9,12 +9,39 @@ use Illuminate\Http\Request;
 
 class InternshipController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $internships = Internship::with('company')
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $query = Internship::with('company')
+            ->where('user_id', auth()->id());
+
+        // 企業名検索
+        if ($request->filled('searchI')) {
+            $query->whereHas('company', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->searchI . '%');
+            });
+        }
+
+        // 応募済みのみ
+        if ($request->has('applied')) {
+            $query->where('applied', 1);
+        }
+
+        // 参加済みのみ
+        if ($request->has('joined')) {
+            $query->where('joined', 1);
+        }
+
+        // 開催日時順の並べ替え
+        if ($request->sort === 'new') {
+            $query->orderByDesc('start_datetime');
+        } elseif ($request->sort === 'old') {
+            $query->orderBy('start_datetime');
+        } else {
+            // デフォルト：開催日時が新しい順
+            $query->orderByDesc('start_datetime');
+        }
+
+        $internships = $query->get();
 
         return view('internships.index', compact('internships'));
     }

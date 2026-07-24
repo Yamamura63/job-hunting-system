@@ -87,15 +87,9 @@
                 <div class="m-3">
                     <label class="text-lg font-bold">現在状況</label><br>
                     <select name="status" class="m-2 border rounded">
-                        <option value="noFinish" @selected(old('status', $selection->status) == 'noFinish')>
-                            未終了
-                        </option>
-                        <option value="finish" @selected(old('status', $selection->status) == 'finish')>
-                            終了
-                        </option>
-                        <option value="result" @selected(old('status', $selection->status) == 'result')>
-                            結果発表済み
-                        </option>
+                        <option value="noFinish" @selected(old('status', $selection->status) == 'noFinish')>未終了</option>
+                        <option value="finish" @selected(old('status', $selection->status) == 'finish')>終了・結果未発表</option>
+                        <option value="result" @selected(old('status', $selection->status) == 'result')>結果発表済み</option>
                     </select>
                 </div>
 
