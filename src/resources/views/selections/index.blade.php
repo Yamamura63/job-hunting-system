@@ -80,7 +80,7 @@
         <p class="px-6 mt-5">選考予定が登録されていません。</p>
     @else
         <div class="mx-auto max-w-6xl rounded-lg p-8">
-            <div class="grid grid-cols-3 gap-6 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-6 items-start">
                 @foreach ($selections as $selection)
                     <div class="bg-white rounded-lg shadow p-6">
 
