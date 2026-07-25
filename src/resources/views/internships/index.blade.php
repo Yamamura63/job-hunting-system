@@ -48,11 +48,11 @@
                     応募済み
                 </label>
 
-                {{-- 参加済み --}}
+                {{-- 未参加 --}}
                 <label class="flex items-center gap-1 cursor-pointer">
                     <input type="checkbox" name="joined" value="1" onchange="this.form.submit()"
                         @checked(request()->has('joined'))>
-                    参加済み
+                    未参加
                 </label>
             </form>
 

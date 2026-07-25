@@ -5,6 +5,7 @@ use App\Http\Controllers\SelfPrController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\InternshipController;
 use App\Http\Controllers\SelectionController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test-session', function () {
@@ -20,9 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
