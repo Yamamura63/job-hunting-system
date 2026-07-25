@@ -11,7 +11,7 @@ class SelfPrController extends Controller
 
     public function index()
     {
-        $selfPrs = SelfPr::orderByRaw('CHAR_LENGTH(body) ASC')
+        $selfPrs = SelfPr::orderByRaw('LENGTH(body) ASC')
             ->get();
         return view('self_prs.index', compact('selfPrs'));
     }
