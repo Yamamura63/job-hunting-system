@@ -39,9 +39,11 @@ RUN composer install \
     --no-interaction
 
 # Laravelのstorageとcacheの権限
-RUN chown -R www-data:www-data /var/www/html/storage \
-    /var/www/html/bootstrap/cache
-
+RUN chown -R www-data:www-data \
+    /var/www/html/storage \
+    /var/www/html/bootstrap/cache \
+    /var/www/html/database
+RUN chmod 664 /var/www/html/database/database.sqlite
 RUN php artisan migrate --force
 
 # Apacheのポート
