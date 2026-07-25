@@ -6,34 +6,33 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                    </a>
+                        <img src="{{ asset('logo.png') }}" alt="ロゴ" class="h-9 w-auto"> </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        ホーム
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('selfPr')" :active="request()->routeIs('selfPr')">
-                        {{ __('selfPr') }}
+                        自己PR
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('company')" :active="request()->routeIs('company')">
-                        {{ __('company') }}
+                        企業
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('internship')" :active="request()->routeIs('internship')">
-                        {{ __('internship') }}
+                        インターンシップ
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('selection')" :active="request()->routeIs('selection')">
-                        {{ __('selection') }}
+                        選考
                     </x-nav-link>
                 </div>
             </div>
@@ -59,7 +58,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            マイページ
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -68,8 +67,9 @@
 
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                                this.closest('form').submit();"
+                                class="hover:text-red-500">
+                                ログアウト
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -100,23 +100,23 @@
         class="absolute left-0 right-0 top-16 z-50 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-lg sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+                ホーム
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('selfPr')" :active="request()->routeIs('selfPr')">
-                {{ __('selfPr') }}
+                自己PR
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('company')" :active="request()->routeIs('company')">
-                {{ __('company') }}
+                企業
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('internship')" :active="request()->routeIs('internship')">
-                {{ __('internship') }}
+                インターンシップ
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('selection')" :active="request()->routeIs('selection')">
-                {{ __('selection') }}
+                選考
             </x-responsive-nav-link>
         </div>
 
@@ -129,7 +129,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    マイページ
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
@@ -138,8 +138,9 @@
 
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault();
-                                    this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                                    this.closest('form').submit();"
+                        class="hover:text-red-500">
+                        ログアウト
                     </x-responsive-nav-link>
                 </form>
             </div>
