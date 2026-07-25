@@ -3,7 +3,6 @@
 @section('title', '企業一覧')
 
 @section('content')
-@section('content')
 
     {{-- ページタイトル・追加ボタン --}}
     <div class="sticky top-0 z-10 bg-gray-100 px-6 pt-5 pb-3">
