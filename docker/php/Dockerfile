@@ -1,6 +1,24 @@
+# ==========================================
+# 1. Node.jsでViteをビルド
+# ==========================================
+FROM node:22 AS frontend
+
+WORKDIR /app
+
+COPY src/package*.json ./
+
+RUN npm ci
+
+COPY src/ ./
+
+RUN npm run build
+
+
+# ==========================================
+# 2. PHP + Apache
+# ==========================================
 FROM php:8.2-apache
 
-# 必要なパッケージをインストール
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -12,16 +30,12 @@ RUN apt-get update && apt-get install -y \
     zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Apache Rewrite
 RUN a2enmod rewrite
 
-# Laravelのドキュメントルート
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-# Apacheの設定変更
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/sites-available/*.conf
 
@@ -29,26 +43,37 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/apache2.conf \
     /etc/apache2/conf-available/*.conf
 
-# Laravelプロジェクトをコピー
+
+# Laravelをコピー
 COPY src/ /var/www/html/
 
-# Composer依存関係をインストール
+
+# Composer
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction
 
-# Laravelのstorageとcacheの権限
+
+# Viteのビルド結果をコピー
+COPY --from=frontend /app/public/build /var/www/html/public/build
+
+
+# SQLiteファイルを作成
+RUN touch /var/www/html/database/database.sqlite \
+    && chown www-data:www-data /var/www/html/database/database.sqlite \
+    && chmod 664 /var/www/html/database/database.sqlite
+
+
+# Laravelの書き込み権限
 RUN chown -R www-data:www-data \
     /var/www/html/storage \
     /var/www/html/bootstrap/cache \
     /var/www/html/database
 
-RUN touch /var/www/html/database/database.sqlite \
-    && chown www-data:www-data /var/www/html/database/database.sqlite \
-    && chmod 664 /var/www/html/database/database.sqlite
 
+# データベースのマイグレーション
 RUN php artisan migrate --force
 
-# Apacheのポート
+
 EXPOSE 80
