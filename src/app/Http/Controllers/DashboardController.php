@@ -19,7 +19,9 @@ class DashboardController extends Controller
         $companyCount = Company::where('user_id', $userId)->count();
 
         // インターンシップ件数
-        $internshipCount = Internship::where('user_id', $userId)->count();
+        $internshipCount = Internship::where('user_id', $userId)
+            ->where('joined', false)
+            ->count();
 
         // 選考未終了件数
         $selectionCount = Selection::where('user_id', $userId)
@@ -40,6 +42,9 @@ class DashboardController extends Controller
                             'name' => $internship->name,
                             'company' => $internship->company->name,
                             'place' => $internship->place,
+                            'url' => route('internship', [
+                                'searchI' => $internship->company->name,
+                            ]),
                         ];
                     })
             )
@@ -56,6 +61,9 @@ class DashboardController extends Controller
                             'name' => $selection->step,
                             'company' => $selection->company->name,
                             'place' => $selection->place,
+                            'url' => route('selection', [
+                                'searchS' => $selection->company->name,
+                            ]),
                         ];
                     })
             )

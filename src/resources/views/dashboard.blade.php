@@ -13,7 +13,7 @@
                         <path fill="currentColor"
                             d="M18 15h-2v2h2m0-6h-2v2h2m2 6h-8v-2h2v-2h-2v-2h2v-2h-2V9h8M10 7H8V5h2m0 6H8V9h2m0 6H8v-2h2m0 6H8v-2h2M6 7H4V5h2m0 6H4V9h2m0 6H4v-2h2m0 6H4v-2h2m6-10V3H2v18h20V7z" />
                     </svg>
-                    <a href="{{ route('company') }}" class="text-2xl ml-2 hover:underline" title="一覧を見る">気になる企業</a>
+                    <a href="{{ route('company') }}" class="text-2xl ml-2 hover:underline">登録企業</a>
                 </div>
                 <p class="text-3xl font-bold text-right">{{ $companyCount }}社</p>
             </div>
@@ -26,7 +26,8 @@
                         <path fill="currentColor"
                             d="M1920 0v2048H256v-254H128v-128h128v-257H128v-128h128V769H128V641h128V385H128V257h128V0zm-128 128H384v1792h1408zm-128 384h-640V384h640zm0 256h-640V640h640zm-960 892q-39 0-73-14t-60-40t-40-60t-15-74q0-39 14-73t40-59t60-41t74-15q39 0 73 15t59 40t41 60t15 73q0 39-15 73t-40 60t-60 40t-73 15m0-256q-29 0-48 19t-20 49q0 29 19 48t49 20q29 0 48-19t20-49q0-29-19-48t-49-20m0-640q-39 0-73-14t-60-40t-40-60t-15-74q0-39 14-73t40-59t60-41t74-15q39 0 73 15t59 40t41 60t15 73q0 39-15 73t-40 60t-60 40t-73 15m0-256q-29 0-48 19t-20 49q0 29 19 48t49 20q29 0 48-19t20-49q0-29-19-48t-49-20m960 900h-640v-128h640zm0 256h-640v-128h640z" />
                     </svg>
-                    <a href="{{ route('internship') }}" class="text-2xl ml-2 hover:underline" title="一覧を見る">インターンシップ</a>
+                    <a href="{{ route('internship', ['joined' => '0']) }}"
+                        class="text-2xl ml-2 hover:underline">参加予定インターンシップ</a>
                 </div>
                 <p class="text-3xl font-bold text-right">{{ $internshipCount }}件</p>
             </div>
@@ -42,7 +43,8 @@
                                 d="M44 13.002V42a2 2 0 0 1-2 2H13.003M13 20.486l6 5.525l10-10.292" />
                         </g>
                     </svg>
-                    <a href="{{ route('selection', ['status' => 'noFinish']) }}" class="text-2xl ml-2 hover:underline" title="一覧を見る"">選考中</a>
+                    <a href="{{ route('selection', ['status' => 'noFinish']) }}"
+                        class="text-2xl ml-2 hover:underline">選考中</a>
                 </div>
                 <p class="text-3xl font-bold text-right">{{ $selectionCount }}件</p>
             </div>
@@ -63,23 +65,52 @@
             <h2 class="text-5xl font-semibold">直近の予定</h2>
         </div>
         @forelse ($upcomingEvents as $event)
-            <div class="border-b">
-                <p>
-                    {{ \Carbon\Carbon::parse($event['datetime'])->format('n/j H:i') }}
-                </p>
+            <a href="{{ $event['url'] }}" class="flex items-center p-3 hover:bg-slate-100 border-b">
+                @if ($event['type'] == 'internship')
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 2048 2048"
+                        class="text-3xl">
+                        <title xmlns="">company-directory</title>
+                        <path fill="currentColor"
+                            d="M1920 0v2048H256v-254H128v-128h128v-257H128v-128h128V769H128V641h128V385H128V257h128V0zm-128 128H384v1792h1408zm-128 384h-640V384h640zm0 256h-640V640h640zm-960 892q-39 0-73-14t-60-40t-40-60t-15-74q0-39 14-73t40-59t60-41t74-15q39 0 73 15t59 40t41 60t15 73q0 39-15 73t-40 60t-60 40t-73 15m0-256q-29 0-48 19t-20 49q0 29 19 48t49 20q29 0 48-19t20-49q0-29-19-48t-49-20m0-640q-39 0-73-14t-60-40t-40-60t-15-74q0-39 14-73t40-59t60-41t74-15q39 0 73 15t59 40t41 60t15 73q0 39-15 73t-40 60t-60 40t-73 15m0-256q-29 0-48 19t-20 49q0 29 19 48t49 20q29 0 48-19t20-49q0-29-19-48t-49-20m960 900h-640v-128h640zm0 256h-640v-128h640z" />
+                    </svg>
+                @else
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"
+                        class="text-3xl">
+                        <title xmlns="">full-selection</title>
+                        <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
+                            <path d="M34 5H8a3 3 0 0 0-3 3v26a3 3 0 0 0 3 3h26a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3Z" />
+                            <path stroke-linecap="round"
+                                d="M44 13.002V42a2 2 0 0 1-2 2H13.003M13 20.486l6 5.525l10-10.292" />
+                        </g>
+                    </svg>
+                @endif
 
-                <p>
-                    {{ $event['company'] }}
+                <p class="ml-3">
+                    {{ \Carbon\Carbon::parse($event['datetime'])->format('n/j H:i') }} ～
                 </p>
-
-                <p>
+                <p class="ml-5 text-xl">
                     {{ $event['name'] }}
                 </p>
 
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+                    class="ml-4 text-sky-700">
+                    <title xmlns="">building</title>
+                    <path fill="currentColor"
+                        d="M14 8h1a1 1 0 0 0 0-2h-1a1 1 0 0 0 0 2m0 4h1a1 1 0 0 0 0-2h-1a1 1 0 0 0 0 2M9 8h1a1 1 0 0 0 0-2H9a1 1 0 0 0 0 2m0 4h1a1 1 0 0 0 0-2H9a1 1 0 0 0 0 2m12 8h-1V3a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v17H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2m-8 0h-2v-4h2Zm5 0h-3v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5H6V4h12Z" />
+                </svg>
+                <p class="text-xl">
+                    {{ $event['company'] }}
+                </p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+                    class="ml-3 text-sky-600">
+                    <title xmlns="">baseline-place</title>
+                    <path fill="currentColor"
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7m0 9.5a2.5 2.5 0 0 1 0-5a2.5 2.5 0 0 1 0 5" />
+                </svg>
                 <p>
                     {{ $event['place'] ?: '登録なし' }}
                 </p>
-            </div>
+            </a>
 
         @empty
 

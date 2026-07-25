@@ -28,7 +28,7 @@ class InternshipController extends Controller
 
         // 参加済みのみ
         if ($request->has('joined')) {
-            $query->where('joined', 1);
+            $query->where('joined', 0);
         }
 
         // 開催日時順の並べ替え
