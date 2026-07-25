@@ -104,6 +104,5 @@
     <a href="{{ route('selection') }}" class="border-b">
         ← 一覧に戻る
     </a>
-    ```
 
 @endsection
