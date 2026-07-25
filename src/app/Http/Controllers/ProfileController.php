@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\SelfPr;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,14 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $recentSelfPrs = SelfPr::where('user_id', auth()->id())
+            ->latest()
+            ->take(3)
+            ->get();
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'recentSelfPrs' => $recentSelfPrs,
         ]);
     }
 
