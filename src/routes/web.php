@@ -18,7 +18,7 @@ Route::get('/test-session', function () {
 })->middleware('web');
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
