@@ -7,7 +7,7 @@
 
         <title>@yield('title', '就活支援システム')</title>
 
-        <!-- <link rel="icon" href="{{ asset('favicon2.ico') }}"> -->
+        <link rel="icon" href="{{ asset('favicon2.ico') }}">
 
         <!-- Tailwind CSS CDN
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
