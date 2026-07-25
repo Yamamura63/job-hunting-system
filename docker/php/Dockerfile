@@ -42,5 +42,7 @@ RUN composer install \
 RUN chown -R www-data:www-data /var/www/html/storage \
     /var/www/html/bootstrap/cache
 
+RUN php artisan migrate --force
+
 # Apacheのポート
 EXPOSE 80
