@@ -1,9 +1,16 @@
 {
     "name": "就活管理システム",
     "short_name": "就活管理",
-    "start_url": "/",
+    "start_url": "/login",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }

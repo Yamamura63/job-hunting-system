@@ -1,72 +1,26 @@
-const CACHE_NAME = 'job-hunting-system-v2';
+const CACHE_NAME = 'job-hunting-pwa-v1';
 
-const urlsToCache = [
+const STATIC_ASSETS = [
     '/login',
-    '/register',
+    '/manifest.json',
     '/logo.png',
     '/favicon3.ico',
-    '/manifest.json',
 ];
 
 self.addEventListener('install', event => {
-    self.skipWaiting();
-
     event.waitUntil(
         caches.open(CACHE_NAME).then(async cache => {
-
-            await Promise.all(
-                urlsToCache.map(url =>
-                    cache.add(url).catch(error => {
-                        console.error('Cache failed:', url, error);
-                    })
-                )
-            );
-
-            try {
-                const response = await fetch('/build/manifest.json');
-                const manifest = await response.json();
-
-                const assets = [];
-
-                Object.values(manifest).forEach(entry => {
-
-                    if (entry.file) {
-                        assets.push('/build/' + entry.file);
-                    }
-
-                    if (entry.css) {
-                        entry.css.forEach(cssFile => {
-                            assets.push('/build/' + cssFile);
-                        });
-                    }
-
-                    if (entry.assets) {
-                        entry.assets.forEach(assetFile => {
-                            assets.push('/build/' + assetFile);
-                        });
-                    }
-                });
-
-                await Promise.all(
-                    assets.map(url =>
-                        cache.add(url).catch(error => {
-                            console.error(
-                                'Asset cache failed:',
-                                url,
-                                error
-                            );
-                        })
-                    )
-                );
-
-            } catch (error) {
-                console.error(
-                    'Failed to cache Vite assets:',
-                    error
-                );
+            for (const url of STATIC_ASSETS) {
+                try {
+                    await cache.add(url);
+                } catch (error) {
+                    console.error('Cache failed:', url, error);
+                }
             }
         })
     );
+
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
@@ -74,8 +28,8 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(cacheName => cacheName !== CACHE_NAME)
-                    .map(cacheName => caches.delete(cacheName))
+                    .filter(name => name !== CACHE_NAME)
+                    .map(name => caches.delete(name))
             );
         })
     );
@@ -84,28 +38,53 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+    const request = event.request;
 
     // GET以外はService Workerで処理しない
-    if (event.request.method !== 'GET') {
+    if (request.method !== 'GET') {
         return;
     }
 
-    // 自分のサイト以外は処理しない
-    if (!event.request.url.startsWith(self.location.origin)) {
+    // chrome-extensionなど外部スキームは無視
+    if (!request.url.startsWith(self.location.origin)) {
         return;
     }
 
     event.respondWith(
-        caches.match(event.request)
-            .then(response => {
+        caches.match(request).then(cachedResponse => {
+            if (cachedResponse) {
+                return cachedResponse;
+            }
 
-                // キャッシュがあれば使用
-                if (response) {
+            return fetch(request)
+                .then(response => {
+
+                    // 正常なレスポンスだけキャッシュ
+                    if (
+                        response &&
+                        response.status === 200 &&
+                        response.type === 'basic'
+                    ) {
+                        const responseClone = response.clone();
+
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(request, responseClone)
+                                .catch(error => {
+                                    console.error(
+                                        'Cache put failed:',
+                                        request.url,
+                                        error
+                                    );
+                                });
+                        });
+                    }
+
                     return response;
-                }
-
-                // なければネットワーク
-                return fetch(event.request);
-            })
+                })
+                .catch(() => {
+                    // オフライン時のフォールバック
+                    return caches.match('/login');
+                });
+        })
     );
 });
