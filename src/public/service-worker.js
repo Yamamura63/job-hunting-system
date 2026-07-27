@@ -1,63 +1,21 @@
-const CACHE_NAME = 'job-hunting-system-v1';
+const CACHE_NAME = 'job-hunting-system-v2';
 
 const urlsToCache = [
     '/login',
+    '/manifest.json',
     '/logo.png',
     '/favicon3.ico',
-    '/manifest.json',
 ];
 
 self.addEventListener('install', event => {
-    self.skipWaiting();
-
     event.waitUntil(
-        caches.open(CACHE_NAME).then(async cache => {
-            // 基本ファイルをキャッシュ
-            await Promise.all(
-                urlsToCache.map(url =>
-                    cache.add(url).catch(error => {
-                        console.error('Cache failed:', url, error);
-                    })
-                )
-            );
-
-            // Viteのmanifest.jsonからCSS・JSを取得
-            try {
-                const response = await fetch('/build/manifest.json');
-                const manifest = await response.json();
-
-                const assets = [];
-
-                Object.values(manifest).forEach(entry => {
-                    if (entry.file) {
-                        assets.push('/build/' + entry.file);
-                    }
-
-                    if (entry.css) {
-                        entry.css.forEach(cssFile => {
-                            assets.push('/build/' + cssFile);
-                        });
-                    }
-
-                    if (entry.assets) {
-                        entry.assets.forEach(assetFile => {
-                            assets.push('/build/' + assetFile);
-                        });
-                    }
-                });
-
-                await Promise.all(
-                    assets.map(url =>
-                        cache.add(url).catch(error => {
-                            console.error('Asset cache failed:', url, error);
-                        })
-                    )
-                );
-            } catch (error) {
-                console.error('Failed to cache Vite assets:', error);
-            }
-        })
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.addAll(urlsToCache);
+            })
     );
+
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
@@ -68,20 +26,33 @@ self.addEventListener('activate', event => {
                     .filter(cacheName => cacheName !== CACHE_NAME)
                     .map(cacheName => caches.delete(cacheName))
             );
-        })
+        }).then(() => self.clients.claim())
     );
-
-    self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request).then(response => {
-            if (response) {
-                return response;
-            }
+    // GET以外はService Workerで処理しない
+    if (event.request.method !== 'GET') {
+        return;
+    }
 
-            return fetch(event.request);
-        })
+    event.respondWith(
+        fetch(event.request)
+            .then(response => {
+                // 正常なレスポンスならキャッシュにも保存
+                if (response && response.status === 200) {
+                    const responseClone = response.clone();
+
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseClone);
+                    });
+                }
+
+                return response;
+            })
+            .catch(() => {
+                // オフラインの場合はキャッシュを使用
+                return caches.match(event.request);
+            })
     );
 });
