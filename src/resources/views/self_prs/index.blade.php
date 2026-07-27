@@ -4,58 +4,56 @@
 
 @section('content')
 
-<div class="flex justify-between items-center mt-5 mb-5 ml-6 mr-9 gap-2 shrink-0">
-    <h1 class="text-3xl font-bold">自己PR一覧</h1>
+    <div class="flex justify-between items-center mt-5 mb-5 ml-6 mr-9 gap-2 shrink-0">
+        <h1 class="text-3xl font-bold">自己PR一覧</h1>
 
-    <a href="{{ route('selfPr.create') }}"
-        class="px-4 py-2 bg-blue-500 text-white rounded">
-        ＋ 自己PRを追加
-    </a>
-</div>
-
-<div id="empty-message" class="hidden ml-6">
-    <p>自己PRが登録されていません。</p>
-</div>
-
-<div id="self-pr-list"
-    class="mx-auto max-w-6xl rounded-lg p-8 flex justify-center">
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start w-full">
+        <a href="{{ route('selfPr.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+            ＋ 自己PRを追加
+        </a>
     </div>
 
-</div>
+    <div id="empty-message" class="hidden ml-6">
+        <p>自己PRが登録されていません。</p>
+    </div>
 
-<script type="module">
-    import {
-        getAllData,
-        deleteData
-    } from '/build/assets/app.js';
+    <div id="self-pr-list" class="mx-auto max-w-6xl rounded-lg p-8 flex justify-center">
 
-    const list = document.querySelector('#self-pr-list > div');
-    const emptyMessage = document.getElementById('empty-message');
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start w-full">
+        </div>
 
-    async function loadSelfPrs() {
+    </div>
 
-        try {
-            const selfPrs = await window.indexedDBService.getAllData('self_prs');
+    <script type="module">
+        import {
+            getAllData,
+            deleteData
+        } from '/build/assets/app.js';
 
-            list.innerHTML = '';
+        const list = document.querySelector('#self-pr-list > div');
+        const emptyMessage = document.getElementById('empty-message');
 
-            if (selfPrs.length === 0) {
-                emptyMessage.classList.remove('hidden');
-                return;
-            }
+        async function loadSelfPrs() {
 
-            emptyMessage.classList.add('hidden');
+            try {
+                const selfPrs = await window.indexedDBService.getAllData('self_prs');
 
-            selfPrs.forEach(selfPr => {
+                list.innerHTML = '';
 
-                const card = document.createElement('div');
+                if (selfPrs.length === 0) {
+                    emptyMessage.classList.remove('hidden');
+                    return;
+                }
 
-                card.className =
-                    'bg-white rounded-lg shadow p-6';
+                emptyMessage.classList.add('hidden');
 
-                card.innerHTML = `
+                selfPrs.forEach(selfPr => {
+
+                    const card = document.createElement('div');
+
+                    card.className =
+                        'bg-white rounded-lg shadow p-6';
+
+                    card.innerHTML = `
                     <div class="flex justify-between items-start">
 
                         <p class="text-xl font-bold border-b inline-block mb-3 w-64 truncate"
@@ -89,7 +87,7 @@
                                 </svg>
                             </button>
 
-                            <a href="{{ route('selfPr.edit', '') }}/${selfPr.id}"
+                            <a href="/selfPr/${selfPr.id}/edit"
                                 class="cursor-pointer hover:text-emerald-500">
 
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -138,88 +136,88 @@
                     </button>
                 `;
 
-                list.appendChild(card);
+                    list.appendChild(card);
 
-                const body = card.querySelector(`#body-${selfPr.id}`);
-                const moreButton = card.querySelector(`#button-${selfPr.id}`);
+                    const body = card.querySelector(`#body-${selfPr.id}`);
+                    const moreButton = card.querySelector(`#button-${selfPr.id}`);
 
-                setTimeout(() => {
-                    if (body.scrollHeight > body.clientHeight) {
-                        moreButton.classList.remove('hidden');
-                    }
-                }, 0);
+                    setTimeout(() => {
+                        if (body.scrollHeight > body.clientHeight) {
+                            moreButton.classList.remove('hidden');
+                        }
+                    }, 0);
 
-                moreButton.addEventListener('click', () => {
+                    moreButton.addEventListener('click', () => {
 
-                    body.classList.toggle('line-clamp-3');
+                        body.classList.toggle('line-clamp-3');
 
-                    moreButton.textContent =
-                        body.classList.contains('line-clamp-3')
-                            ? 'もっと見る'
-                            : '閉じる';
+                        moreButton.textContent =
+                            body.classList.contains('line-clamp-3') ?
+                            'もっと見る' :
+                            '閉じる';
 
-                });
-            });
-
-            document.querySelectorAll('.copy-button').forEach(button => {
-
-                button.addEventListener('click', () => {
-
-                    const text = decodeURIComponent(
-                        button.dataset.body
-                    );
-
-                    navigator.clipboard.writeText(text)
-                        .then(() => {
-                            alert('コピーしました');
-                        })
-                        .catch(() => {
-                            alert('コピーに失敗しました');
-                        });
-
+                    });
                 });
 
-            });
+                document.querySelectorAll('.copy-button').forEach(button => {
 
-            document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', () => {
 
-                button.addEventListener('click', async () => {
+                        const text = decodeURIComponent(
+                            button.dataset.body
+                        );
 
-                    if (!confirm('この自己PRを削除しますか？')) {
-                        return;
-                    }
+                        navigator.clipboard.writeText(text)
+                            .then(() => {
+                                alert('コピーしました');
+                            })
+                            .catch(() => {
+                                alert('コピーに失敗しました');
+                            });
 
-                    await window.indexedDBService.deleteData(
-                        'self_prs',
-                        button.dataset.id
-                    );
-
-                    await loadSelfPrs();
+                    });
 
                 });
 
-            });
+                document.querySelectorAll('.delete-button').forEach(button => {
 
-        } catch (error) {
+                    button.addEventListener('click', async () => {
 
-            console.error(
-                '自己PRの読み込みに失敗しました',
-                error
-            );
+                        if (!confirm('この自己PRを削除しますか？')) {
+                            return;
+                        }
 
+                        await window.indexedDBService.deleteData(
+                            'self_prs',
+                            button.dataset.id
+                        );
+
+                        await loadSelfPrs();
+
+                    });
+
+                });
+
+            } catch (error) {
+
+                console.error(
+                    '自己PRの読み込みに失敗しました',
+                    error
+                );
+
+            }
         }
-    }
 
-    function escapeHtml(text) {
+        function escapeHtml(text) {
 
-        const div = document.createElement('div');
+            const div = document.createElement('div');
 
-        div.textContent = text;
+            div.textContent = text;
 
-        return div.innerHTML;
-    }
+            return div.innerHTML;
+        }
 
-    loadSelfPrs();
-</script>
+        loadSelfPrs();
+    </script>
 
 @endsection
