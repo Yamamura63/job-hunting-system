@@ -1,19 +1,72 @@
-const CACHE_NAME = 'job-hunting-system-v3';
+const CACHE_NAME = 'job-hunting-system-v2';
 
 const urlsToCache = [
     '/login',
-    '/manifest.json',
+    '/register',
     '/logo.png',
     '/favicon3.ico',
+    '/manifest.json',
 ];
 
 self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(urlsToCache))
-    );
-
     self.skipWaiting();
+
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(async cache => {
+
+            await Promise.all(
+                urlsToCache.map(url =>
+                    cache.add(url).catch(error => {
+                        console.error('Cache failed:', url, error);
+                    })
+                )
+            );
+
+            try {
+                const response = await fetch('/build/manifest.json');
+                const manifest = await response.json();
+
+                const assets = [];
+
+                Object.values(manifest).forEach(entry => {
+
+                    if (entry.file) {
+                        assets.push('/build/' + entry.file);
+                    }
+
+                    if (entry.css) {
+                        entry.css.forEach(cssFile => {
+                            assets.push('/build/' + cssFile);
+                        });
+                    }
+
+                    if (entry.assets) {
+                        entry.assets.forEach(assetFile => {
+                            assets.push('/build/' + assetFile);
+                        });
+                    }
+                });
+
+                await Promise.all(
+                    assets.map(url =>
+                        cache.add(url).catch(error => {
+                            console.error(
+                                'Asset cache failed:',
+                                url,
+                                error
+                            );
+                        })
+                    )
+                );
+
+            } catch (error) {
+                console.error(
+                    'Failed to cache Vite assets:',
+                    error
+                );
+            }
+        })
+    );
 });
 
 self.addEventListener('activate', event => {
@@ -24,12 +77,15 @@ self.addEventListener('activate', event => {
                     .filter(cacheName => cacheName !== CACHE_NAME)
                     .map(cacheName => caches.delete(cacheName))
             );
-        }).then(() => self.clients.claim())
+        })
     );
+
+    self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
-    // GET以外は処理しない
+
+    // GET以外はService Workerで処理しない
     if (event.request.method !== 'GET') {
         return;
     }
@@ -40,27 +96,16 @@ self.addEventListener('fetch', event => {
     }
 
     event.respondWith(
-        fetch(event.request)
+        caches.match(event.request)
             .then(response => {
 
-                // 正常なレスポンスだけキャッシュする
-                if (response && response.ok) {
-                    const responseClone = response.clone();
-
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(event.request, responseClone);
-                        })
-                        .catch(error => {
-                            console.error('Cache error:', error);
-                        });
+                // キャッシュがあれば使用
+                if (response) {
+                    return response;
                 }
 
-                return response;
-            })
-            .catch(() => {
-                // オフラインの場合はキャッシュを使用
-                return caches.match(event.request);
+                // なければネットワーク
+                return fetch(event.request);
             })
     );
 });
