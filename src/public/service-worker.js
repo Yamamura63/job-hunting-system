@@ -1,4 +1,4 @@
-const CACHE_NAME = 'job-hunting-system-v2';
+const CACHE_NAME = 'job-hunting-system-v3';
 
 const urlsToCache = [
     '/login',
@@ -10,9 +10,7 @@ const urlsToCache = [
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => {
-                return cache.addAll(urlsToCache);
-            })
+            .then(cache => cache.addAll(urlsToCache))
     );
 
     self.skipWaiting();
@@ -31,21 +29,31 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    // GET以外はService Workerで処理しない
+    // GET以外は処理しない
     if (event.request.method !== 'GET') {
+        return;
+    }
+
+    // 自分のサイト以外は処理しない
+    if (!event.request.url.startsWith(self.location.origin)) {
         return;
     }
 
     event.respondWith(
         fetch(event.request)
             .then(response => {
-                // 正常なレスポンスならキャッシュにも保存
-                if (response && response.status === 200) {
+
+                // 正常なレスポンスだけキャッシュする
+                if (response && response.ok) {
                     const responseClone = response.clone();
 
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, responseClone);
-                    });
+                    caches.open(CACHE_NAME)
+                        .then(cache => {
+                            cache.put(event.request, responseClone);
+                        })
+                        .catch(error => {
+                            console.error('Cache error:', error);
+                        });
                 }
 
                 return response;
