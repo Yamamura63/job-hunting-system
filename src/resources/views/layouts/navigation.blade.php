@@ -38,7 +38,7 @@
             </div>
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            {{-- <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
@@ -74,7 +74,7 @@
                         </form>
                     </x-slot>
                 </x-dropdown>
-            </div>
+            </div> --}}
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
@@ -121,7 +121,7 @@
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+        {{-- <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
@@ -132,7 +132,7 @@
                     マイページ
                 </x-responsive-nav-link>
 
-                <!-- Authentication -->
+                <!-- Authentication
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
@@ -144,6 +144,6 @@
                     </x-responsive-nav-link>
                 </form>
             </div>
-        </div>
+        </div>--}}
     </div>
 </nav>

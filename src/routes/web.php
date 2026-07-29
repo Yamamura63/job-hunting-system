@@ -18,35 +18,28 @@ Route::get('/test-session', function () {
 })->middleware('web');
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect()->route('dashboard');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth'])
+
     ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
-require __DIR__ . '/auth.php';
+// require __DIR__ . '/auth.php';
 
 Route::resource('self-prs', SelfPrController::class);
 Route::get('/selfPr', [SelfPrController::class, 'index'])
     ->name('selfPr');
 Route::get('/selfPr/create', [SelfPrController::class, 'create'])
     ->name('selfPr.create');
-Route::post('/selfPr', [SelfPrController::class, 'store'])
-    ->name('selfPr.store');
-
 Route::get('/selfPr/{selfPr}/edit', [SelfPrController::class, 'edit'])
     ->name('selfPr.edit');
-Route::put('/selfPr/{selfPr}', [SelfPrController::class, 'update'])
-    ->name('selfPr.update');
-Route::delete('/selfPr/{selfPr}', [SelfPrController::class, 'destroy'])
-    ->name('selfPr.destroy');
 
 
 Route::resource('companies', CompanyController::class);
