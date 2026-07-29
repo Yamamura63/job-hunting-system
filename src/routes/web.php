@@ -47,16 +47,8 @@ Route::get('/companies', [CompanyController::class, 'index'])
     ->name('company');
 Route::get('/companies/create', [CompanyController::class, 'create'])
     ->name('company.create');
-Route::post('/companies', [CompanyController::class, 'store'])
-    ->name('company.store');
-
 Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])
     ->name('company.edit');
-Route::put('/companies/{company}', [CompanyController::class, 'update'])
-    ->name('company.update');
-Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
-    ->name('company.destroy');
-
 
 Route::resource('internships', InternshipController::class);
 Route::get('/internships', [InternshipController::class, 'index'])

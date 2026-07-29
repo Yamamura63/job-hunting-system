@@ -87,11 +87,17 @@ export async function getAllData(storeName) {
 export async function getData(storeName, id) {
     const db = await openDB();
 
+    const numericId = Number(id);
+
+    if (!Number.isInteger(numericId) || numericId <= 0) {
+        throw new Error(`Invalid ID: ${id}`);
+    }
+
     return new Promise((resolve, reject) => {
         const transaction = db.transaction(storeName, 'readonly');
         const store = transaction.objectStore(storeName);
 
-        const request = store.get(Number(id));
+        const request = store.get(numericId);
 
         request.onsuccess = () => {
             resolve(request.result);
