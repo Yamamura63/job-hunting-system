@@ -33,7 +33,7 @@
                 <button type="submit"
                     class="cursor-pointer text-lg text-white bg-blue-400 rounded pt-2 pb-2 pl-4 pr-4">✐更新</button>
             </form>
-        </div>ss
+        </div>
     </div>
 
     <a href="{{ route('selfPr') }}" class="border-b">
@@ -41,8 +41,8 @@
     </a>
 
     <script type="module">
-        const id = window.location.pathname.split('/').filter(Boolean).pop();
-
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const id = pathParts[pathParts.length - 2];
         const form = document.getElementById('self-pr-form');
         const title = document.getElementById('title');
         const body = document.getElementById('body');
