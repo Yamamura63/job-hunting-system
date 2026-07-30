@@ -3,7 +3,7 @@ import {
     addData,
     deleteData,
     STORES
-} from './indexeddb.js';
+} from "./indexeddb";
 
 const companyList = document.getElementById('company-list');
 const template = document.getElementById('company-card-template');
@@ -284,7 +284,7 @@ function createCompanyCard(company) {
         card.querySelector('.edit-link');
 
     editLink.href =
-        `/company/${company.id}/edit`;
+        `/companies/${company.id}/edit`;
 
 
     // 削除

@@ -42,13 +42,11 @@ Route::get('/selfPr/{selfPr}/edit', [SelfPrController::class, 'edit'])
     ->name('selfPr.edit');
 
 
-Route::resource('companies', CompanyController::class);
-Route::get('/companies', [CompanyController::class, 'index'])
-    ->name('company');
-Route::get('/companies/create', [CompanyController::class, 'create'])
-    ->name('company.create');
-Route::get('/companies/{company}/edit', [CompanyController::class, 'edit'])
-    ->name('company.edit');
+Route::resource('companies', CompanyController::class)->only([
+    'index',
+    'create',
+    'edit',
+]);
 
 Route::resource('internships', InternshipController::class);
 Route::get('/internships', [InternshipController::class, 'index'])

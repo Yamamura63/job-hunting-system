@@ -6,7 +6,7 @@
     <h1 class="text-4xl p-3">企業登録</h1>
     <div class="p-8">
         <div class="mx-auto max-w-6xl rounded-lg bg-white p-4 sm:p-8 shadow flex justify-center">
-            <form method="POST" action="{{ route('company.store') }}" class="w-full max-w-2xl">
+            <form id="company-form" class="w-full max-w-2xl">
                 @csrf
                 <div class="m-3">
                     <label class="text-lg font-bold">企業名</label>
@@ -137,68 +137,10 @@
             </form>
         </div>
     </div>
-    <a href="{{ route('company') }}" class="border-b">
+    <a href="{{ route('companies.index') }}" class="border-b">
         ← 一覧に戻る
     </a>
 
-    <script>
-        const kihon = document.getElementById('kihon');
-        const other = document.getElementById('other');
-        const salary = document.getElementById('salary'); // hidden
-        const salaryText = document.getElementById('salaryText'); // 表示用
-
-        function calcSalary() {
-            const kihonValue = Number(kihon.value) || 0;
-            const otherValue = Number(other.value) || 0;
-
-            const total = kihonValue + otherValue;
-
-            salary.value = total; // DBへ送信する値
-            salaryText.textContent = total; // 画面に表示する値
-        }
-
-        kihon.addEventListener('input', calcSalary);
-        other.addEventListener('input', calcSalary);
-
-
-        const urlList = document.getElementById('url-list');
-        const addButton = document.getElementById('add-url');
-
-        let index = 1;
-
-        function addUrlRow() {
-            const row = document.createElement('div');
-
-            row.innerHTML = `
-    <div class="flex flex-col sm:flex-row gap-3 mt-3 min-w-0">
-        <input
-            type="text"
-            name="urls[${index}][memo]"
-            placeholder="詳細（公式HP・採用ページなど）"
-            class="w-full sm:w-1/3 min-w-0 box-border border rounded p-2">
-
-        <input
-            type="url"
-            name="urls[${index}][url]"
-            placeholder="https://"
-            class="w-full sm:flex-1 min-w-0 box-border border rounded p-2">
-
-        <button type="button" class="delete-url p-2 text-white bg-slate-400 rounded">
-            削除
-        </button>
-    </div>
-`;
-
-            urlList.appendChild(row);
-
-            row.querySelector('.delete-url').addEventListener('click', () => {
-                row.remove();
-            });
-
-            index++;
-        }
-
-        addButton.addEventListener('click', addUrlRow);
-    </script>
+    @vite('resources/js/company-create.js')
 
 @endsection

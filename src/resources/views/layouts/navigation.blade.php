@@ -21,7 +21,7 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('company')" :active="request()->routeIs('company')">
+                    <x-nav-link :href="route('companies.index')" :active="request()->routeIs('company')">
                         企業
                     </x-nav-link>
                 </div>
@@ -107,7 +107,7 @@
                 自己PR
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('company')" :active="request()->routeIs('company')">
+            <x-responsive-nav-link :href="route('companies.index')" :active="request()->routeIs('company')">
                 企業
             </x-responsive-nav-link>
 

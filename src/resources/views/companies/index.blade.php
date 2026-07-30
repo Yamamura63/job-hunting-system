@@ -14,7 +14,7 @@
         <div class="flex justify-between items-center">
             <h1 class="text-3xl font-bold">企業一覧</h1>
 
-            <a href="{{ route('company.create') }}" class="shrink-0 px-4 py-2 bg-blue-500 text-white rounded">
+            <a href="{{ route('companies.create') }}" class="shrink-0 px-4 py-2 bg-blue-500 text-white rounded">
                 ＋ 企業を追加
             </a>
         </div>

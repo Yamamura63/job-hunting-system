@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
     /**
-     * 企業一覧を表示
+     * 一覧
      */
     public function index()
     {
-        // 企業と関連するURLをまとめて取得
         $companies = Company::with('urls')
             ->latest()
             ->get();
@@ -21,7 +19,7 @@ class CompanyController extends Controller
     }
 
     /**
-     * 企業登録画面を表示
+     * 登録画面
      */
     public function create()
     {
@@ -29,13 +27,12 @@ class CompanyController extends Controller
     }
 
     /**
-     * 企業編集画面を表示
+     * 編集画面
      */
-    public function edit(Company $company)
+    public function edit($id)
     {
-        // 編集画面でURLも使用するため取得
-        $company->load('urls');
-
-        return view('companies.edit', compact('company'));
+        return view('companies.edit', [
+            'id' => $id
+        ]);
     }
 }
