@@ -1,4 +1,4 @@
-const CACHE_NAME = 'job-hunting-pwa-v1';
+const CACHE_NAME = 'job-hunting-system-v3';
 
 const STATIC_ASSETS = [
     '/login',
