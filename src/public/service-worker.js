@@ -1,8 +1,6 @@
-const CACHE_NAME = 'job-hunting-system-v2';
+const CACHE_NAME = 'job-hunting-system-v3';
 
 const urlsToCache = [
-    '/login',
-    '/register',
     '/logo.png',
     '/favicon3.ico',
     '/manifest.json',
