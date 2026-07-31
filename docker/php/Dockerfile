@@ -61,6 +61,9 @@ COPY --from=frontend /app/public/build /var/www/html/public/build
 # Laravelの書き込み権限
 RUN chown -R www-data:www-data \
     /var/www/html/storage \
+    /var/www/html/bootstrap/cache \
+    && chmod -R 775 \
+    /var/www/html/storage \
     /var/www/html/bootstrap/cache
 
 
