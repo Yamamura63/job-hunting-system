@@ -63,4 +63,11 @@ RUN chown -R www-data:www-data \
     /var/www/html/storage \
     /var/www/html/bootstrap/cache
 
+
+COPY src/start.sh /usr/local/bin/start.sh
+
+RUN chmod +x /usr/local/bin/start.sh
+
+CMD ["start.sh"]
+
 EXPOSE 80
