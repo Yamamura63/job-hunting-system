@@ -22,11 +22,11 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libsqlite3-dev \
+    libpq-dev \
     libzip-dev \
     && docker-php-ext-install \
     pdo \
-    pdo_sqlite \
+    pdo_pgsql \
     zip \
     && rm -rf /var/lib/apt/lists/*
 
@@ -58,22 +58,9 @@ RUN composer install \
 # Viteのビルド結果をコピー
 COPY --from=frontend /app/public/build /var/www/html/public/build
 
-
-# SQLiteファイルを作成
-RUN touch /var/www/html/database/database.sqlite \
-    && chown www-data:www-data /var/www/html/database/database.sqlite \
-    && chmod 664 /var/www/html/database/database.sqlite
-
-
 # Laravelの書き込み権限
 RUN chown -R www-data:www-data \
     /var/www/html/storage \
-    /var/www/html/bootstrap/cache \
-    /var/www/html/database
-
-
-# データベースのマイグレーション
-RUN php artisan migrate --force
-
+    /var/www/html/bootstrap/cache
 
 EXPOSE 80
